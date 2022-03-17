@@ -5,7 +5,7 @@
 # - SiMple AppLication of FisheR machinerY
 #
 # Developed by William Matthewson (Unige - william.matthewson@unige.ch) and Dennis Stock (Unige), based on a prior code from Mario Ballardini (University of Bologna).
-# Used for simple Fisher forecasting and calculation of redshift-weighted number counts spectra in []22
+# Used for simple Fisher forecasting and calculation of redshift-weighted number counts spectra in 2203.07414.
 #
 # The Parameters in this file are for a minimal example that can be used to quickly test that the various pieces of the code are working properly.
 # Please see the following brief introduction for more details of this minimal example and how to use this code.
@@ -20,7 +20,7 @@
 # (3) - The full complement of spectra are read in and combined with user-defined parameters for observational surveys to produce Fisher forecasts for a set of parameters, also user-defined. Note: If adding new parameters for the Fisher forecasting, it is important that these parameters be linked somehow to the CLASS input, so that they effect the generated spectra and subsequent numerical derivatives used in the forecasts.
 # A new user will need to familiarise themselves with the input parameters of CLASS, the survey (biases, galaxy distributions, sky coverage etc.) they would like to forecast and the available parameters that are supported by this code. For now the code has only been tested with spectroscopic galaxy surveys, but the option exists to generalize to photometric/Intensity mapping surveys in the Fisher code and the modified version of CLASSgal. 
 # The major modifications to CLASSgal are: 
-# - The addition of certain window functions (see \omega(z_i,z) in the paper []) that may be used to generate the \zeta spectra. 
+# - The addition of certain window functions (see \omega(z_i,z) in the paper 2203.07414) that may be used to generate the \zeta spectra. 
 # - The addition of a 'selection_list' variable that allows the window function for each bin to be specified individually.
 # - The inclusion of redshift-dependent function forms for the linear bias, b(z), specific to certain surveys, eventually with the aim of marginalising over the fitting parameters for the biases. 
 #
@@ -140,7 +140,7 @@ zMx = [1.8,2.0]                                  # Maximum redshift bound for ea
 zMn = [0.9,0.1]                                  # Minimum redshift bound for each survey
 N = [2,0]                                        # 2x the individual number of bins for the survey considered. All other elements should be set to zero, unless the code has been adapted for multi-tracer calculations [TBC]. Since each bin will have a number counts power spectrum (\Delta) and a redshift-weighted number counts power spectrum (\zeta), this should always be an EVEN number = 2x Number of C_\ell^{\Delta} bins!
 Nsum = sum(N)
-Redsig = [0.001,0.001]                           # Redshift accuracy, later should be multiplied (1+z) for each bin. Redshift window widths, on the other hand, are stored in zsigmas[] #CURRENTLY this parameter has no part in the calculation, but e.g. for photometric galaxies where the resolution is more limiting, should be taken into account in the galaxy distribution function.
+Redsig = [0.001,0.001]                           # Redshift accuracy, later should be multiplied (1+z) for each bin. Redshift window widths, on the other hand, are stored in zsigmas [TBC] #CURRENTLY this parameter has no part in the calculation, but e.g. for photometric galaxies where the resolution is more limiting, should be taken into account in the galaxy distribution function.
 #sigmaZ = Redsig[0]
 biastype = [2,3]                                 # Linear bias general function form: 0 - Constant bias: b=biasno 1 - DESI bias: b(z) = biasno/D(z) 2 - Euclid bias: b(z) = biasno + biasno2*z 3 - SKAII bias: b(z) = biasno*exp(biasno2*z).
 biasno = [0.79,0.5887] 
@@ -367,7 +367,7 @@ def RUNCLASS(signV,params,key):
             ssurvey = sEUC
 
          # In order to generate the spectra necessary for each bin requires 2 \Delta spectra with different kinds of window functions, in addition to the Gaussian case.
-         # Each redshift bin's spectrum has to be generated 3 times, with window functions 3 - \omega(z_i,z) (in the paper []), 4 - z*\omega(z_i,z) (in the paper []), 0 - Gaussian. The "selection_list" parameter passed to the CLASS .ini file has been added to the CLASS code, along with the additional window functions, to allow for the control of each bin's window function individually. This is the reason for the following rather tedious generation of strings.
+         # Each redshift bin's spectrum has to be generated 3 times, with window functions 3 - \omega(z_i,z) (in the paper 2203.07414), 4 - z*\omega(z_i,z) (in the paper 2203.07414), 0 - Gaussian. The "selection_list" parameter passed to the CLASS .ini file has been added to the CLASS code, along with the additional window functions, to allow for the control of each bin's window function individually. This is the reason for the following rather tedious generation of strings.
       
          if i==len(bins)-1:
             selectionmeans+=str(zmeans[i])+', '+str(zmeans[i]+1e-7)+', '+str(zmeans[i]+2e-7)
