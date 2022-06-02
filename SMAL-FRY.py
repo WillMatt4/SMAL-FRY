@@ -103,7 +103,7 @@ start=time.time()
 #COSMOLOGY AND INPUTS FOR CLASS:
 ################################
 RUN_SPECTRA = 1                                   # Should CLASS be used to generate the necessary spectra? YES: 1, NO: 0.
-EXTRACT_ZETA = 1                                  # Should the redshift-weighted number count power spectrum? YES: 1, NO: 0.
+EXTRACT_ZETA = 0                                  # Should the redshift-weighted number count power spectrum? YES: 1, NO: 0.
 CLASSPATH = '/FILEPATHTO/class_public-3.0.1_mod/' #
 NO = '00'                                         # This Number relates to the filename and numbering scheme of the input CLASS spectra.
 
