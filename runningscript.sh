@@ -40,7 +40,7 @@ echo ""
 
 
 #launch simulations
-srun python3 SMAL-FRY.py##RDN0_parallel_script.py
+srun python3 SMAL-FRY.py
 
 echo ""
 echo "***** DONE *****"
