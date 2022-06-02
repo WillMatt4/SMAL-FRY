@@ -90,7 +90,7 @@ import time
 import os.path
 from os import path
 from os import system
-from mpi4pywrapper import *
+import mpi4pywrapper as pbs
 start=time.time()
 
 
@@ -166,6 +166,8 @@ for i in range(len(Lmin_TrPre)):
 
 fskydegsq = [15000,30000]                        # The sky coverage of each survey in deg^2 
 nParsLess = 6                                    #Number of parameters excluding parameters to be marginalised over. This part of the code is not yet active [TBC].
+
+print(pbs.rank)
 
 SpectraPath = CLASSPATH+'spectra/'+suptype+'/'   # Path to the CLASS-generated spectra. If the earlier instructions about labelling are followed, this can be left unchanged. 
 f=open(suptype+'_fiducial_params.dat','w')
