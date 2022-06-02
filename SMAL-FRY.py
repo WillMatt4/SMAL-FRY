@@ -115,8 +115,8 @@ NO = '00'                                         # This Number relates to the f
 ####################################
 params={}
 params['wb'] = 0.022383                          # \Omega_b*h^2
-params['wc'] = 0.12011                           # \Omega_c*h^2
-params['h'] = 0.6732
+#params['wc'] = 0.12011                           # \Omega_c*h^2
+#params['h'] = 0.6732
 #params['ns'] = 0.96605
 #params['logAs'] = 3.0448                        # log(10^{10}A_s
 k_pivot = 0.05                                   # [h/Mpc]
