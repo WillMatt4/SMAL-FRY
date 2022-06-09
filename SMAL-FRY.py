@@ -92,7 +92,7 @@ from os import path
 from os import system
 import mpi4pywrapper as mpi
 start=time.time()
-mpi.barrier = lambda : 1
+#mpi.barrier = lambda : 1
 
 
 ##################################################################
