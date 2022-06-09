@@ -6,7 +6,7 @@ from __future__ import print_function
 import os
 import sys
 
-verbose = False
+verbose = True#False
 if 'SLURM_SUBMIT_DIR' in os.environ.keys():
     try:
         from mpi4py import MPI
