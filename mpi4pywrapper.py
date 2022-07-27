@@ -3,7 +3,7 @@
 from __future__ import print_function
 import os
 import sys
-import mpi4py as MPI
+#import mpi4py as MPI
 
 verbose = True#False
 if 'SLURM_SUBMIT_DIR' in os.environ.keys():
