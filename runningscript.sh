@@ -26,10 +26,10 @@ echo `date '+%F %H:%M:%S'`
 echo ""
 
 # load Anaconda and OpenMPI
-module load Anaconda3
+#module load Anaconda3
 #module load GCC/11.3.0
 #module load OpenMPI/4.1.4
-module load foss
+#module load foss
 
 echo "Loaded Anaconda3 and foss"
 echo ""
