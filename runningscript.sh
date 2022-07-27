@@ -27,6 +27,8 @@ echo ""
 
 # load Anaconda and OpenMPI
 module load Anaconda3
+module load GCC/11.3.0
+module load OpenMPI/4.1.4
 #module load foss
 
 echo "Loaded Anaconda3 and foss"
