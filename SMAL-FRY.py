@@ -109,6 +109,7 @@ start=time.time()
 RUN_SPECTRA = 1                                   # Should CLASS be used to generate the necessary spectra? YES: 1, NO: 0.
 EXTRACT_ZETA = 0                                  # Should the redshift-weighted number count power spectrum? YES: 1, NO: 0.
 CLASSPATH = '/home/users/m/matthews/scratch/Zeta/SMAL-FRY/class_public-3.0.1_mod/' #
+OUTPATH = '/home/users/m/matthews/scratch/Zeta/outputs/' #
 NO = '00'                                         # This Number relates to the filename and numbering scheme of the input CLASS spectra.
 
 #################
@@ -170,7 +171,7 @@ for i in range(len(Lmin_TrPre)):
 fskydegsq = [15000,30000]                        # The sky coverage of each survey in deg^2 
 nParsLess = 6                                    #Number of parameters excluding parameters to be marginalised over. This part of the code is not yet active [TBC].
 
-SpectraPath = CLASSPATH+'spectra/'+suptype+'/'   # Path to the CLASS-generated spectra. If the earlier instructions about labelling are followed, this can be left unchanged. 
+SpectraPath = OUTPATH+'spectra/'+suptype+'/'   # Path to the CLASS-generated spectra. If the earlier instructions about labelling are followed, this can be left unchanged. 
 f=open(suptype+'_fiducial_params.dat','w')
 for par in params:
    f.write(str(params[par])+'\n')
