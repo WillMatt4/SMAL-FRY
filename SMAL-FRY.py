@@ -169,6 +169,7 @@ for i in range(len(Lmin_TrPre)):
 fskydegsq = [15000,30000]                        # The sky coverage of each survey in deg^2 
 nParsLess = 6                                    #Number of parameters excluding parameters to be marginalised over. This part of the code is not yet active [TBC].
 
+print('Well we got here: '+str(Nsum)+'\n')
 print(mpi.rank)
 
 SpectraPath = CLASSPATH+'spectra/'+suptype+'/'   # Path to the CLASS-generated spectra. If the earlier instructions about labelling are followed, this can be left unchanged. 
