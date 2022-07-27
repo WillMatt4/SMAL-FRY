@@ -13,7 +13,7 @@
 
 #SBATCH -J test0##rdn0_1000
 #SBATCH --output=slurm-%x-%J.out
-
+e
 
 echo "Starting at `date`"
 echo "Running on hosts: $SLURM_NODELIST"
@@ -26,8 +26,8 @@ echo `date '+%F %H:%M:%S'`
 echo ""
 
 # load Anaconda and OpenMPI
-module load GCCcore/8.3.0
-module load glibc/2.30
+#module load GCCcore/8.3.0
+#module load glibc/2.30
 #module load Anaconda3
 #module load GCC/11.3.0
 #module load OpenMPI/4.1.4
