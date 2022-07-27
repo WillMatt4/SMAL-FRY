@@ -26,8 +26,10 @@ echo `date '+%F %H:%M:%S'`
 echo ""
 
 # load Anaconda and OpenMPI
-module load GCCcore/8.3.0
-module load glibc/2.30
+#module load GCCcore/8.3.0
+#module load glibc/2.30
+module load GCCcore/6.4.0
+module load glibc/2.17
 #module load Anaconda3
 #module load GCC/11.3.0
 #module load OpenMPI/4.1.4
