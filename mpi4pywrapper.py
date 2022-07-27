@@ -3,12 +3,12 @@
 from __future__ import print_function
 import os
 import sys
-#import mpi4py as MPI
 
 verbose = True#False
 if 'SLURM_SUBMIT_DIR' in os.environ.keys():
     try:
         from mpi4py import MPI
+        print("success?'\n'")
         rank = MPI.COMM_WORLD.Get_rank()
         size = MPI.COMM_WORLD.Get_size()
         barrier = MPI.COMM_WORLD.Barrier
