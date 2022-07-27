@@ -42,7 +42,7 @@ echo ""
 
 
 #launch simulations
-srun python3 SMAL-FRY.py
+srun python SMAL-FRY.py
 
 echo ""
 echo "***** DONE *****"
