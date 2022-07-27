@@ -31,7 +31,7 @@ echo ""
 #module load OpenMPI/4.1.4
 #module load foss
 
-echo "Loaded Anaconda3 and foss"
+#echo "Loaded Anaconda3 and foss"
 echo ""
 
 # # #OpenMP settings:
