@@ -6,7 +6,7 @@ import sys
 
 verbose = True#False
 if 'SLURM_SUBMIT_DIR' in os.environ.keys():
-    try:
+    #try:
         from mpi4py import MPI
         print("success?'\n'")
         rank = MPI.COMM_WORLD.Get_rank()
@@ -15,8 +15,8 @@ if 'SLURM_SUBMIT_DIR' in os.environ.keys():
         finalize = MPI.Finalize
         if verbose:
             print('pbs.py : setup OK, rank %s in %s' % (rank, size))
-    except:
-        if verbose: sys.stderr.write('pbs.py: unable to setup mpi4py\n')
+    #except:
+    #    if verbose: sys.stderr.write('pbs.py: unable to setup mpi4py\n')
 elif 'NERSC_HOST' not in os.environ.keys():
     try:
         from mpi4py import MPI
