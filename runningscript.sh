@@ -36,10 +36,11 @@ echo ""
 #module load GCCcore/8.3.0
 #module load glibc/2.30
 module load Anaconda3
-#module load GCC/11.3.0
-#module load OpenMPI/4.1.4
+module load GCC/11.3.0
+module load OpenMPI/4.1.4
 #module load foss
-#conda activate myenv
+conda activate myenv
+module load mpi4py/3.0.3-timed-pingpong
 
 #echo "Loaded Anaconda3 and foss"
 echo ""
