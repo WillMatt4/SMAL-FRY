@@ -1,7 +1,11 @@
 #!/bin/sh
-##SBATCH --partition=shared-cpu
+##up to 12h:
+#SBATCH --partition=shared-cpu
+##12h - 4days:
 ##SBATCH --partition=public-cpu
-#SBATCH --partition=debug-cpu
+##up to 15min:
+##SBATCH --partition=debug-cpu
+##max. of 2 cores for 14 days:
 ##SBATCH --partition=public-longrun-cpu
 
 ##SBATCH --exclude=cpu[116-119]
@@ -11,7 +15,7 @@
 
 ##SBATCH --mail-type=ALL
 
-#SBATCH -J test0##rdn0_1000
+#SBATCH -J deltazeta_vanilla##test0##rdn0_1000
 #SBATCH --output=slurm-%x-%J.out
 e
 
