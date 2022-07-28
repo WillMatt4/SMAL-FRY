@@ -534,14 +534,24 @@ def SaveClDz(key,signV,Cl_di_dj,Cl_di_zj,Cl_zi_dj,Cl_zi_zj):
 #Calculate Initial Spectra:
 ############################
 if RUN_SPECTRA==1:
+  imin = 0
+  imax = len(params)
+  idealpp = cpp_sims_lib('p_p', 15, 3, imin, imax, v='', param_file='cmbs4wide_idealized', label='p_p ideal')
+  iters = [0, 3]
+  sims = np.arange(imin, imax+1)
+  jobs = [[simidx, it] for simidx in sims for it in iters]
+  for idx, it in jobs[mpi.rank::mpi.size]:
+    
+    
   fidrunQ=0
-
   #FIDUCIAL:
   ##########
   if fidrunQ==0:
      Spectra(0,params,'')
      fidrunQ=1
 
+  mpi.barrier #wait for fiducial run to complete (background to be generated)
+        
   for key in params:
 
   #PLUS STEP:
