@@ -429,7 +429,7 @@ def RUNCLASS(signV,params,key):
        f.write('write background = no\n')      
        f.write('write parameters = no\n')
     f.write('selection_magnification_bias = '+selectionmagbiass+'\n')
-    f.write('root = '+SpectraPath+suptype+'_'+key+'_'+signV+'_\n')
+    f.write('root = '+SpectraPath+suptype+'_'+key+'_'+signV+'_'+NO+'\n')
     f.close()
     
     system('(cd '+CLASSPATH+' && exec ./class '+suptype+'_'+key+'_'+signV+'.ini)')
