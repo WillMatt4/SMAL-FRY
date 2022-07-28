@@ -108,9 +108,9 @@ start=time.time()
 ################################
 #COSMOLOGY AND INPUTS FOR CLASS:
 ################################
-RUN_SPECTRA = 0                                   # Should CLASS be used to generate the necessary spectra? YES: 1, NO: 0.
-EXTRACT_ZETA = 0                                  # Should the redshift-weighted number count power spectrum? YES: 1, NO: 0.
-RUN_FISHER = 1                                    # Should the Fisher analysis be run (DOESN'T REQUIRE MULTIPLE CORES)
+RUN_SPECTRA = 1                                   # Should CLASS be used to generate the necessary spectra? YES: 1, NO: 0.
+EXTRACT_ZETA = 1                                  # Should the redshift-weighted number count power spectrum? YES: 1, NO: 0.
+RUN_FISHER = 0                                    # Should the Fisher analysis be run (DOESN'T REQUIRE MULTIPLE CORES)
 CLASSPATH = '/home/users/m/matthews/scratch/Zeta/SMAL-FRY/class_public-3.0.1_mod/' #
 OUTPATH = '/home/users/m/matthews/scratch/Zeta/outputs/' #
 NO = '00'                                         # This Number relates to the filename and numbering scheme of the input CLASS spectra.
@@ -567,25 +567,27 @@ if RUN_SPECTRA==1:
       
   mpi.barrier
 
-Z,Ch,Hub,D,f  = np.genfromtxt(SpectraPath+suptype+'__'+'fiducial_'+NO+'_background.dat',unpack=True,usecols = [0,4,3,17,18])
 
-Dofz = interpolate.interp1d(Z, D, kind='cubic',axis = 0)    #Mpc
-fofz = interpolate.interp1d(Z, f, kind='cubic',axis = 0)    #Mpc
-Chif = interpolate.interp1d(Z, Ch, kind='cubic',axis = 0)   #Mpc
-Hubf = interpolate.interp1d(Z, Hub, kind='cubic',axis = 0)  #/Mpc
+#Read and Initialize background
+################################
+if EXTRACT_ZETA==1:  
+  
+  Z,Ch,Hub,D,f  = np.genfromtxt(SpectraPath+suptype+'__'+'fiducial_'+NO+'_background.dat',unpack=True,usecols = [0,4,3,17,18])
 
-zs = [mean(bins[i]) for i in range(len(bins))]
-zbars = np.zeros(len(zs))
-for i in range(len(zs)):
+  Dofz = interpolate.interp1d(Z, D, kind='cubic',axis = 0)    #Mpc
+  fofz = interpolate.interp1d(Z, f, kind='cubic',axis = 0)    #Mpc
+  Chif = interpolate.interp1d(Z, Ch, kind='cubic',axis = 0)   #Mpc
+  Hubf = interpolate.interp1d(Z, Hub, kind='cubic',axis = 0)  #/Mpc
+
+  zs = [mean(bins[i]) for i in range(len(bins))]
+  zbars = np.zeros(len(zs))
+  for i in range(len(zs)):
      fzi = lambda z: np.exp(-1/2*(z-zs[i])**2/zsigmas[i]**2)/np.sqrt(2*np.pi)/zsigmas[i]*z*Chif(z)**2/Hubf(z)
      fi=  lambda z: np.exp(-1/2*(z-zs[i])**2/zsigmas[i]**2)/np.sqrt(2*np.pi)/zsigmas[i]*Chif(z)**2/Hubf(z)
      # The factor of 30*zsigmas is arbitrary, it must be selected based on the characteristics of the survey and its window functions, so that the numerical integral is not over to large a range that may result in the resolution of the non-zero values of the amplitude being poor. This is the integral note.
      zbars[i]= quad(fzi, max([0,zs[i]-30*zsigmas[i]]), zs[i]+30*zsigmas[i])[0]/quad(fi, max([0,zs[i]-30*zsigmas[i]]), zs[i]+30*zsigmas[i])[0]
 
 
-#Read and Initialize background
-################################
-if EXTRACT_ZETA==1:
   itr = mpi.rank
   if itr==0:  
     Cl_di_dj,Cl_di_zj,Cl_zi_dj,Cl_zi_zj = ExtractClDz('','fiducial',zbars)
