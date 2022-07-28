@@ -35,7 +35,7 @@ echo ""
 #module load glibc/2.17
 #module load GCCcore/8.3.0
 #module load glibc/2.30
-module load Anaconda3
+#module load Anaconda3
 module load GCC/10.2.0
 module load OpenMPI/4.0.5
 #module load foss
