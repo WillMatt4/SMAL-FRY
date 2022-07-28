@@ -18,7 +18,7 @@
 
 #SBATCH -J deltazeta_vanilla##test0##rdn0_1000
 #SBATCH --output=slurm-%x-%J.out
-e
+
 
 echo "Starting at `date`"
 echo "Running on hosts: $SLURM_NODELIST"
