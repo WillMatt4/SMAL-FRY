@@ -929,15 +929,15 @@ plt.show()
     drvDZli = deriv_covDeZe(l,i)
     drvDZlj = deriv_covDeZe(l,j)
     FACTOR = SKYFRAC*((2*l+1)/2)
-    inversa=inv(covDZl)
-    inversaD=inv(covDZl[0:int(NsumTemp/2),0:int(NsumTemp/2)]) #Delta alone
-    inversaZ=inv(covDZl[int(NsumTemp/2):int(NsumTemp),int(NsumTemp/2):int(NsumTemp)]) #Zeta alone
+    inversa=np.linalg.inv(covDZl)
+    inversaD=np.linalg.inv(covDZl[0:int(NsumTemp/2),0:int(NsumTemp/2)]) #Delta alone
+    inversaZ=np.linalg.inv(covDZl[int(NsumTemp/2):int(NsumTemp),int(NsumTemp/2):int(NsumTemp)]) #Zeta alone
     drvDZliD = drvDZli[0:int(NsumTemp/2),0:int(NsumTemp/2)]
     drvDZljD = drvDZlj[0:int(NsumTemp/2),0:int(NsumTemp/2)]
     drvDZliZ = drvDZli[int(NsumTemp/2):int(NsumTemp),int(NsumTemp/2):int(NsumTemp)]
     drvDZljZ = drvDZlj[int(NsumTemp/2):int(NsumTemp),int(NsumTemp/2):int(NsumTemp)]
 
-    inversaZD=inv(covDexZe(l)) #Delta and Zeta, no DeltaxZeta
+    inversaZD=np.linalg.inv(covDexZe(l)) #Delta and Zeta, no DeltaxZeta
     
 
     return FACTOR*sum(diag(mat(inversa)*mat(drvDZli)*mat(inversa)*mat(drvDZlj))), FACTOR*sum(diag(mat(inversaD)*mat(drvDZliD)*mat(inversaD)*mat(drvDZljD))), FACTOR*sum(diag(mat(inversaZ)*mat(drvDZliZ)*mat(inversaZ)*mat(drvDZljZ))), FACTOR*sum(diag(mat(inversaZD)*mat(deriv_covDexZe(l,i))*mat(inversaZD)*mat(deriv_covDexZe(l,j))))
@@ -958,10 +958,10 @@ plt.show()
             FisherDeZeZ[i,j]=FisherDeZeZ[j,i]=F_DeZe(i,j)[2]
             FisherDeZeDZ[i,j]=FisherDeZeDZ[j,i]=F_DeZe(i,j)[3]
 
-  errDeZe=sqrt(diag(inv(FisherDeZe)))
-  errDeZeD=sqrt(diag(inv(FisherDeZeD)))
-  errDeZeZ=sqrt(diag(inv(FisherDeZeZ)))
-  errDeZeDZ=sqrt(diag(inv(FisherDeZeDZ)))
+  errDeZe=sqrt(diag(np.linalg.inv(FisherDeZe)))
+  errDeZeD=sqrt(diag(np.linalg.inv(FisherDeZeD)))
+  errDeZeZ=sqrt(diag(np.linalg.inv(FisherDeZeZ)))
+  errDeZeDZ=sqrt(diag(np.linalg.inv(FisherDeZeDZ)))
 
   errDeZe = errDeZe[0:len(errDeZe)-Marg]
   errDeZeD = errDeZeD[0:len(errDeZeD)-Marg]
@@ -1004,7 +1004,7 @@ plt.show()
       f=open(LAB+suptype+'_'+BINNES+'NN.dat','wb')
     elif (Noise==1):
       f=open(LAB+suptype+'_'+BINNES+'.dat','wb')
-    savetxt(f,inv(RESULTS[j])[0:len(params)-Marg,0:len(params)-Marg])
+    savetxt(f,np.linalg.inv(RESULTS[j])[0:len(params)-Marg,0:len(params)-Marg])
     f.close()
 
     if (Noise==0):
