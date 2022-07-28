@@ -108,6 +108,7 @@ start=time.time()
 ################################
 RUN_SPECTRA = 1                                   # Should CLASS be used to generate the necessary spectra? YES: 1, NO: 0.
 EXTRACT_ZETA = 0                                  # Should the redshift-weighted number count power spectrum? YES: 1, NO: 0.
+RUN_FISHER = 0                                    # Should the Fisher analysis be run (DOESN'T REQUIRE MULTIPLE CORES)
 CLASSPATH = '/home/users/m/matthews/scratch/Zeta/SMAL-FRY/class_public-3.0.1_mod/' #
 OUTPATH = '/home/users/m/matthews/scratch/Zeta/outputs/' #
 NO = '00'                                         # This Number relates to the filename and numbering scheme of the input CLASS spectra.
@@ -534,26 +535,18 @@ def SaveClDz(key,signV,Cl_di_dj,Cl_di_zj,Cl_zi_dj,Cl_zi_zj):
 #Calculate Initial Spectra:
 ############################
 if RUN_SPECTRA==1:
-  imin = 0
-  imax = len(params)
-  idealpp = cpp_sims_lib('p_p', 15, 3, imin, imax, v='', param_file='cmbs4wide_idealized', label='p_p ideal')
-  iters = [0, 3]
-  sims = np.arange(imin, imax+1)
-  jobs = [[simidx, it] for simidx in sims for it in iters]
-  for idx, it in jobs[mpi.rank::mpi.size]:
     
-    
-  fidrunQ=0
   #FIDUCIAL:
   ##########
-  if fidrunQ==0:
-     Spectra(0,params,'')
-     fidrunQ=1
+  if itr==0:
+      Spectra(0,params,'')
+      fidrunQ=1
 
   mpi.barrier #wait for fiducial run to complete (background to be generated)
-        
-  for key in params:
-
+    
+  if itr!=0:  
+      itr = mpi.rank
+      key = Keys[itr-1]
   #PLUS STEP:
   ###########
       Spectra(1,params,key)
@@ -570,7 +563,7 @@ if RUN_SPECTRA==1:
     ##############
         Spectra(-2,params,key)
       
-
+  mpi.barrier
 
 Z,Ch,Hub,D,f  = np.genfromtxt(SpectraPath+suptype+'__'+'fiducial_'+NO+'_background.dat',unpack=True,usecols = [0,4,3,17,18])
 
@@ -591,26 +584,37 @@ for i in range(len(zs)):
 #Read and Initialize background
 ################################
 if EXTRACT_ZETA==1:
+    
+  if itr==0:  
+    Cl_di_dj,Cl_di_zj,Cl_zi_dj,Cl_zi_zj = ExtractClDz('','fiducial',zbars)
+    SaveClDz('','fiducial',Cl_di_dj,Cl_di_zj,Cl_zi_dj,Cl_zi_zj)
 
-  Cl_di_dj,Cl_di_zj,Cl_zi_dj,Cl_zi_zj = ExtractClDz('','fiducial',zbars)
-  SaveClDz('','fiducial',Cl_di_dj,Cl_di_zj,Cl_zi_dj,Cl_zi_zj)
-
-  for key in params:
+  if itr!=0:  
+   itr = mpi.rank
+   key = Keys[itr-1]
    for signV in ['minus1','plus1','minus2','plus2']:
       Cl_di_dj,Cl_di_zj,Cl_zi_dj,Cl_zi_zj=ExtractClDz(key,signV,zbars)
       SaveClDz(key,signV,Cl_di_dj,Cl_di_zj,Cl_zi_dj,Cl_zi_zj)
 
+   mpi.barrier
+
+###############################
+#LET THE FISHERING COMMENCE!!!#
+###############################
+
+if RUN_FISHER==1:
+
 #Check for missing spectra
 ############################ 
 # This check might give false hope if the user forgets to set 'NO' to the correct one. 
-filedir = SpectraPath
-print('Reading from: '+filedir)
+  filedir = SpectraPath
+  print('Reading from: '+filedir)
 
-nono=0
-if(path.exists(filedir+suptype+'__fiducial_'+NO+'_cl_Delta_zeta.dat')==False):
+  nono=0
+  if(path.exists(filedir+suptype+'__fiducial_'+NO+'_cl_Delta_zeta.dat')==False):
     print('Missing fiducial spectra\n')
 
-for par in params:
+  for par in params:
     if(path.exists(filedir+suptype+'_'+par+'_minus1_'+NO+'_cl_Delta_zeta.dat')==False):
         print('Missing spectra for: '+par+'-*step\n')
         nono+=1
@@ -629,53 +633,53 @@ for par in params:
 
 
 # Selecting relevant data columns 
-Col = [0]
-'''
+  Col = [0]
+  '''
 #TRACER AUTO Correlation only
 for i in range(4,Nsum+3+1):
           for j in range(1-(i-3),Nsum-(i-3)+1):
               Col.append((i-1)*(Nsum+3)+i+j)
-'''
+  '''
 #TRACER AUTO and cross Correlation
-for i in range(1,int((Nsum)**2+1)):
+  for i in range(1,int((Nsum)**2+1)):
     Col.append(i)
 
-if Nsum>0:
+  if Nsum>0:
 
-  Tr=loadtxt(filedir+suptype+'_'+'_fiducial'+'_'+NO+'_cl_Delta_zeta.dat',usecols = Col)
-  Tr_m = []
-  Tr_p = []
-
-  if stencil==5:
-    Tr_m2 = []
-    Tr_p2 = []
-
-
-  for par in params:##pDic[0:nParsLess]:  #When properly included, marginalization will involve a change here [TBC].
-
-    Tr_m.append(loadtxt(filedir+suptype+'_'+par+'_minus1_'+NO+'_cl_Delta_zeta.dat',usecols = Col))
-    Tr_p.append(loadtxt(filedir+suptype+'_'+par+'_plus1_'+NO+'_cl_Delta_zeta.dat',usecols = Col))
+    Tr=loadtxt(filedir+suptype+'_'+'_fiducial'+'_'+NO+'_cl_Delta_zeta.dat',usecols = Col)
+    Tr_m = []
+    Tr_p = []
 
     if stencil==5:
-      Tr_m2.append(loadtxt(filedir+suptype+'_'+par+'_minus2_'+NO+'_cl_Delta_zeta.dat',usecols = Col))
-      Tr_p2.append(loadtxt(filedir+suptype+'_'+par+'_plus2_'+NO+'_cl_Delta_zeta.dat',usecols = Col))
+      Tr_m2 = []
+      Tr_p2 = []
+
+
+    for par in params:##pDic[0:nParsLess]:  #When properly included, marginalization will involve a change here [TBC].
+
+      Tr_m.append(loadtxt(filedir+suptype+'_'+par+'_minus1_'+NO+'_cl_Delta_zeta.dat',usecols = Col))
+      Tr_p.append(loadtxt(filedir+suptype+'_'+par+'_plus1_'+NO+'_cl_Delta_zeta.dat',usecols = Col))
+
+      if stencil==5:
+        Tr_m2.append(loadtxt(filedir+suptype+'_'+par+'_minus2_'+NO+'_cl_Delta_zeta.dat',usecols = Col))
+        Tr_p2.append(loadtxt(filedir+suptype+'_'+par+'_plus2_'+NO+'_cl_Delta_zeta.dat',usecols = Col))
 
 ###############################################
 #Background cosmological data for lmax cut-off:
 ###############################################
 # z-dependent lmax: In its current state, the code will use a fixed maximum ell equal to the value of 'lmax', this is because an lmax based on kmax*Chi(z) might become fairly large for higher redshifts and is not conducive for testing with the minimal example. Once you are convinced the code is correctly set-up, you can turn the z-dependent lmax cut-off on, by commenting out the line 'Lmax_Tr = [lmax for z in zmeans]' below and uncommenting the line 'Lmax_Tr = [int(kmax*Chif(z)) for z in zmeans]'. 
 
-Z,Ch,Hub,D,f  = np.genfromtxt(SpectraPath+suptype+'__'+'fiducial_'+NO+'_background.dat',unpack=True,usecols = [0,4,3,17,18])
+  Z,Ch,Hub,D,f  = np.genfromtxt(SpectraPath+suptype+'__'+'fiducial_'+NO+'_background.dat',unpack=True,usecols = [0,4,3,17,18])
 
-Dofz = interpolate.interp1d(Z, D, kind='cubic',axis = 0)    #Mpc
-fofz = interpolate.interp1d(Z, f, kind='cubic',axis = 0)    #Mpc
-Chif = interpolate.interp1d(Z, Ch, kind='cubic',axis = 0)   #Mpc
-Hubf = interpolate.interp1d(Z, Hub, kind='cubic',axis = 0)  #/Mpc
+  Dofz = interpolate.interp1d(Z, D, kind='cubic',axis = 0)    #Mpc
+  fofz = interpolate.interp1d(Z, f, kind='cubic',axis = 0)    #Mpc
+  Chif = interpolate.interp1d(Z, Ch, kind='cubic',axis = 0)   #Mpc
+  Hubf = interpolate.interp1d(Z, Hub, kind='cubic',axis = 0)  #/Mpc
 
-if WHICHTRACERS[0]==0 or WHICHTRACERS[0]==1:     # Selecting which surveys get lmax cut-off #(0: EUC_SPEC) #(0: SKA_SPEC)
-   Lmax_Tr = [lmax for z in zmeans]              # fixed maximum ell.
+  if WHICHTRACERS[0]==0 or WHICHTRACERS[0]==1:     # Selecting which surveys get lmax cut-off #(0: EUC_SPEC) #(0: SKA_SPEC)
+     Lmax_Tr = [lmax for z in zmeans]              # fixed maximum ell.
    #Lmax_Tr = [int(kmax*Chif(z)) for z in zmeans]# z-dependent maximum ell.
-Lmax_Tr+=Lmax_Tr                                 # These are the lmax values for the \Delta bins then the \zeta bins (The same for each bin of corresponding redshift).
+  Lmax_Tr+=Lmax_Tr                                 # These are the lmax values for the \Delta bins then the \zeta bins (The same for each bin of corresponding redshift).
 
 
 
@@ -683,56 +687,56 @@ Lmax_Tr+=Lmax_Tr                                 # These are the lmax values for
 #SET SKY-FRACTION:
 ##################
 
-SKYFRAC = fskyTr#[WHICHTRACERS[0]] since without multi-tracer [TBC] there is only one experiment (and thus one sky fraction) per forecast
+  SKYFRAC = fskyTr#[WHICHTRACERS[0]] since without multi-tracer [TBC] there is only one experiment (and thus one sky fraction) per forecast
 
 
-NshotD=zeros([int(Nsum/2),len(N)]) 
-NshotZ=zeros([int(Nsum/2),len(N)])  
-NshotZD=zeros([int(Nsum/2),len(N)]) 
+  NshotD=zeros([int(Nsum/2),len(N)]) 
+  NshotZ=zeros([int(Nsum/2),len(N)])  
+  NshotZD=zeros([int(Nsum/2),len(N)]) 
 
-def fi(z,zsig,zm):
+  def fi(z,zsig,zm):
     return np.exp(-1/2*(z-zm)**2/zsig**2)/np.sqrt(2*np.pi)/zsig*Chif(z)**2/Hubf(z)
-def Wi(z,zsig,zm):
+  def Wi(z,zsig,zm):
     return np.exp(-1/2*(z-zm)**2/zsig**2)/np.sqrt(2*np.pi)/zsig
 
 
-def DeltaIntgd(z,zsig,zm):
-   return Wi(z,zsig,zm)**2          #already normalized
+  def DeltaIntgd(z,zsig,zm):
+     return Wi(z,zsig,zm)**2          #already normalized
 # For the ranges in the normalizing integrals of the following integrand function, see the 'integral note'. 
-def ZetaIntgd(z,zsig,zm,zbar):
- if (subctype[Tracer]=='Euc_spec'):
-   return (z-zbar)**2*(fi(z,zsig,zm)/quad(fi, max([0,zm-20*zsig]), zm+20*zsig,args = (zsig,zbar))[0])**2
- elif (subctype[Tracer]=='SKA_2_spec'):
-   return (z-zbar)**2*(fi(z,zsig,zm)/quad(fi, max([0,zm-5*zsig]), zm+5*zsig,args = (zsig,zbar))[0])**2
+  def ZetaIntgd(z,zsig,zm,zbar):
+   if (subctype[Tracer]=='Euc_spec'):
+     return (z-zbar)**2*(fi(z,zsig,zm)/quad(fi, max([0,zm-20*zsig]), zm+20*zsig,args = (zsig,zbar))[0])**2
+   elif (subctype[Tracer]=='SKA_2_spec'):
+     return (z-zbar)**2*(fi(z,zsig,zm)/quad(fi, max([0,zm-5*zsig]), zm+5*zsig,args = (zsig,zbar))[0])**2
 
-def ZetaDeltaIntgd(z,zsig,zm,zbar):
- if (subctype[Tracer]=='Euc_spec'):
-   return (z-zbar)*(fi(z,zsig,zm)/quad(fi, max([0,zm-20*zsig]), zm+20*zsig,args = (zsig,zbar))[0])*Wi(z,zsig,zm)
- elif (subctype[Tracer]=='SKA_2_spec'):
-   return (z-zbar)*(fi(z,zsig,zm)/quad(fi, max([0,zm-5*zsig]), zm+5*zsig,args = (zsig,zbar))[0])*Wi(z,zsig,zm)
+  def ZetaDeltaIntgd(z,zsig,zm,zbar):
+   if (subctype[Tracer]=='Euc_spec'):
+     return (z-zbar)*(fi(z,zsig,zm)/quad(fi, max([0,zm-20*zsig]), zm+20*zsig,args = (zsig,zbar))[0])*Wi(z,zsig,zm)
+   elif (subctype[Tracer]=='SKA_2_spec'):
+     return (z-zbar)*(fi(z,zsig,zm)/quad(fi, max([0,zm-5*zsig]), zm+5*zsig,args = (zsig,zbar))[0])*Wi(z,zsig,zm)
 
-def ZetaNoise(zsig,zm,zbar):
- if (subctype[Tracer]=='Euc_spec'):
-   return quad(ZetaIntgd, max([0,zm-20*zsig]), zm+20*zsig, args = (zsig,zm,zbar))[0]/quad(DeltaIntgd, max([0,zm-20*zsig]), zm+20*zsig,args = (zsig,zm))[0]
- elif (subctype[Tracer]=='SKA_2_spec'):
-   return quad(ZetaIntgd, max([0,zm-5*zsig]), zm+5*zsig, args = (zsig,zm,zbar))[0]/quad(DeltaIntgd, max([0,zm-5*zsig]), zm+5*zsig,args = (zsig,zm))[0]
-
-
-def ZetaDeltaNoise(zsig,zm,zbar):
- if (subctype[Tracer]=='Euc_spec'):
-   return quad(ZetaDeltaIntgd, max([0,zm-20*zsig]), zm+20*zsig, args = (zsig,zm,zbar))[0]/quad(DeltaIntgd, max([0,zm-20*zsig]), zm+20*zsig,args = (zsig,zm))[0]
- elif (subctype[Tracer]=='SKA_2_spec'):
-   return quad(ZetaDeltaIntgd, max([0,zm-5*zsig]), zm+5*zsig, args = (zsig,zm,zbar))[0]/quad(DeltaIntgd, max([0,zm-5*zsig]), zm+5*zsig,args = (zsig,zm))[0]
+  def ZetaNoise(zsig,zm,zbar):
+   if (subctype[Tracer]=='Euc_spec'):
+     return quad(ZetaIntgd, max([0,zm-20*zsig]), zm+20*zsig, args = (zsig,zm,zbar))[0]/quad(DeltaIntgd, max([0,zm-20*zsig]), zm+20*zsig,args = (zsig,zm))[0]
+   elif (subctype[Tracer]=='SKA_2_spec'):
+     return quad(ZetaIntgd, max([0,zm-5*zsig]), zm+5*zsig, args = (zsig,zm,zbar))[0]/quad(DeltaIntgd, max([0,zm-5*zsig]), zm+5*zsig,args = (zsig,zm))[0]
 
 
-def dNdzW(z,Tracer,zsig,zm):
-    return dNdz(z,Tracer)#*Wi(z,zsig,zm)
+  def ZetaDeltaNoise(zsig,zm,zbar):
+   if (subctype[Tracer]=='Euc_spec'):
+     return quad(ZetaDeltaIntgd, max([0,zm-20*zsig]), zm+20*zsig, args = (zsig,zm,zbar))[0]/quad(DeltaIntgd, max([0,zm-20*zsig]), zm+20*zsig,args = (zsig,zm))[0]
+   elif (subctype[Tracer]=='SKA_2_spec'):
+     return quad(ZetaDeltaIntgd, max([0,zm-5*zsig]), zm+5*zsig, args = (zsig,zm,zbar))[0]/quad(DeltaIntgd, max([0,zm-5*zsig]), zm+5*zsig,args = (zsig,zm))[0]
 
-z15 = [0.15,0.25,0.35,0.45,0.55,0.65,0.75,0.85,0.95,1.05,1.15,1.25,1.35,1.45,1.55,1.65,1.75,1.85,1.95]  # Redshifts values from 1509.07562, Table 3.
-nz15 = [6.2e-2,3.63e-2,2.16e-2,1.31e-2,8.07e-3,5.11e-3,3.27e-3,2.11e-3,1.36e-3,8.07e-4,5.56e-4,3.53e-4,2.22e-4,1.39e-4,8.55e-5,5.2e-5,3.12e-5,1.83e-5,1.05e-5] # Corresponding number density values [Mpc^-3] from 1509.07562, Table 3.
-nzf = interpolate.interp1d(z15, nz15, kind='cubic',axis = 0) #Mpc^-3
 
-for Tracer in WHICHTRACERS:
+  def dNdzW(z,Tracer,zsig,zm):
+      return dNdz(z,Tracer)#*Wi(z,zsig,zm)
+
+  z15 = [0.15,0.25,0.35,0.45,0.55,0.65,0.75,0.85,0.95,1.05,1.15,1.25,1.35,1.45,1.55,1.65,1.75,1.85,1.95]  # Redshifts values from 1509.07562, Table 3.
+  nz15 = [6.2e-2,3.63e-2,2.16e-2,1.31e-2,8.07e-3,5.11e-3,3.27e-3,2.11e-3,1.36e-3,8.07e-4,5.56e-4,3.53e-4,2.22e-4,1.39e-4,8.55e-5,5.2e-5,3.12e-5,1.83e-5,1.05e-5] # Corresponding number density values [Mpc^-3] from 1509.07562, Table 3.
+  nzf = interpolate.interp1d(z15, nz15, kind='cubic',axis = 0) #Mpc^-3
+
+  for Tracer in WHICHTRACERS:
 
 ###############################
 #NOISE AND COVARIANCE
@@ -756,7 +760,7 @@ for Tracer in WHICHTRACERS:
              
 
 
-def covDeZe(l):
+  def covDeZe(l):
 # This function generates the covariance matrix for the full combination of \Delta \& \zeta at a particular ell.
 
       Used = []  #Since certain bins are no longer used after their cut-off lmax values, the code keeps track and only uses the necessary bins (bin indices stored in 'Used'). 
@@ -794,7 +798,7 @@ def covDeZe(l):
       return C
 
 ##########
-def covDexZe(l):
+  def covDexZe(l):
 # This function generates the covariance matrix for the combination of \Delta \& \zeta at a particular ell, WITHOUT the \Delta\zeta cross correlations (dizj).
       Used = []
       for i in range(Nsum):
@@ -832,7 +836,7 @@ def covDexZe(l):
 ###################
 #DERIVATIVE MATRIX
 ###################
-def deriv_covDeZe(l,p):
+  def deriv_covDeZe(l,p):
 # This function generates the derivatives of the elements of the covariance matrix, with respect to parameter p, for the full combination of \Delta \& \zeta at a particular ell.
       
       NotUsed = []
@@ -854,7 +858,7 @@ def deriv_covDeZe(l,p):
       return D
 
 ##########
-def deriv_covDexZe(l,p):
+  def deriv_covDexZe(l,p):
 # This function generates the derivatives of the elements of the covariance matrix, with respect to parameter p, for combination of \Delta \& \zeta at a particular ell, WITHOUT the \Delta\zeta cross correlations (dizj).
       
       NotUsed = []
@@ -878,7 +882,7 @@ def deriv_covDexZe(l,p):
         iProxy +=1 
       return D
 
-'''
+  '''
 ##########################
 #DERIVATIVE CHECK
 ##########################
@@ -905,14 +909,14 @@ for p in range(len(params)):
   plt.plot(L,Deriv[0,0,:],label=Keys[p])
 plt.legend()
 plt.show()
-'''
+  '''
 
 
 #####################
 #FISHER CALCULATION
 #####################
 
-def Fkernel_DeZe(i,j,l):
+  def Fkernel_DeZe(i,j,l):
     Used = []
     for k in range(Nsum):
            if l<=Lmax_Tr[k] and l>=Lmin_Tr[k]:
@@ -937,15 +941,15 @@ def Fkernel_DeZe(i,j,l):
 
     return FACTOR*sum(diag(mat(inversa)*mat(drvDZli)*mat(inversa)*mat(drvDZlj))), FACTOR*sum(diag(mat(inversaD)*mat(drvDZliD)*mat(inversaD)*mat(drvDZljD))), FACTOR*sum(diag(mat(inversaZ)*mat(drvDZliZ)*mat(inversaZ)*mat(drvDZljZ))), FACTOR*sum(diag(mat(inversaZD)*mat(deriv_covDexZe(l,i))*mat(inversaZD)*mat(deriv_covDexZe(l,j))))
 
-def F_DeZe(i,j):
+  def F_DeZe(i,j):
     return sum([Fkernel_DeZe(i,j,l)[0] for l in arange(min(Lmin_Tr),max(Lmax_Tr)+1)]), sum([Fkernel_DeZe(i,j,l)[1] for l in arange(min(Lmin_Tr),max(Lmax_Tr)+1)]), sum([Fkernel_DeZe(i,j,l)[2] for l in arange(min(Lmin_Tr),max(Lmax_Tr)+1)]), sum([Fkernel_DeZe(i,j,l)[3] for l in arange(min(Lmin_Tr),max(Lmax_Tr)+1)])
 
-FisherDeZe=zeros([len(params),len(params)])
-FisherDeZeD=zeros([len(params),len(params)])
-FisherDeZeZ=zeros([len(params),len(params)])
-FisherDeZeDZ=zeros([len(params),len(params)])
+  FisherDeZe=zeros([len(params),len(params)])
+  FisherDeZeD=zeros([len(params),len(params)])
+  FisherDeZeZ=zeros([len(params),len(params)])
+  FisherDeZeDZ=zeros([len(params),len(params)])
 
-for i in range(len(params)):
+  for i in range(len(params)):
     for j in range(len(params)):
         if j>=i:
             FisherDeZe[i,j]=FisherDeZe[j,i]=F_DeZe(i,j)[0]
@@ -953,22 +957,22 @@ for i in range(len(params)):
             FisherDeZeZ[i,j]=FisherDeZeZ[j,i]=F_DeZe(i,j)[2]
             FisherDeZeDZ[i,j]=FisherDeZeDZ[j,i]=F_DeZe(i,j)[3]
 
-errDeZe=sqrt(diag(inv(FisherDeZe)))
-errDeZeD=sqrt(diag(inv(FisherDeZeD)))
-errDeZeZ=sqrt(diag(inv(FisherDeZeZ)))
-errDeZeDZ=sqrt(diag(inv(FisherDeZeDZ)))
+  errDeZe=sqrt(diag(inv(FisherDeZe)))
+  errDeZeD=sqrt(diag(inv(FisherDeZeD)))
+  errDeZeZ=sqrt(diag(inv(FisherDeZeZ)))
+  errDeZeDZ=sqrt(diag(inv(FisherDeZeDZ)))
 
-errDeZe = errDeZe[0:len(errDeZe)-Marg]
-errDeZeD = errDeZeD[0:len(errDeZeD)-Marg]
-errDeZeZ = errDeZeZ[0:len(errDeZeZ)-Marg]
-errDeZeDZ = errDeZeDZ[0:len(errDeZeDZ)-Marg]
+  errDeZe = errDeZe[0:len(errDeZe)-Marg]
+  errDeZeD = errDeZeD[0:len(errDeZeD)-Marg]
+  errDeZeZ = errDeZeZ[0:len(errDeZeZ)-Marg]
+  errDeZeDZ = errDeZeDZ[0:len(errDeZeDZ)-Marg]
 
-conderrDeZe = zeros(len(errDeZe))
-conderrDeZeD = zeros(len(errDeZeD))
-conderrDeZeZ = zeros(len(errDeZeZ))
-conderrDeZeDZ = zeros(len(errDeZeDZ))
+  conderrDeZe = zeros(len(errDeZe))
+  conderrDeZeD = zeros(len(errDeZeD))
+  conderrDeZeZ = zeros(len(errDeZeZ))
+  conderrDeZeDZ = zeros(len(errDeZeDZ))
 
-if Cond==1:
+  if Cond==1:
       for i in range(len(FisherDeZe)):
         conderrDeZe[i] = 1/sqrt(FisherDeZe[i,i])
       for i in range(len(FisherDeZeD)):
@@ -979,38 +983,38 @@ if Cond==1:
         conderrDeZeDZ[i] = 1/sqrt(FisherDeZeDZ[i,i])
 
 #Saving of results
-if (Marg!=0):
+  if (Marg!=0):
       suptype=suptype+'_marg'
-if (Fix!=0):
+  if (Fix!=0):
       suptype=suptype+'_fixd'
 
-BINNES = ''
-for i in WHICHTRACERS:
+  BINNES = ''
+  for i in WHICHTRACERS:
       BINNES+=str(int(N[i]/2))+'bin'+subctype[i]
 
-RESULTS = [FisherDeZe,FisherDeZeD,FisherDeZeZ,FisherDeZeDZ]
-RESULTS2 = [errDeZe,errDeZeD,errDeZeZ,errDeZeDZ]
-RESULTS3 = [conderrDeZe,conderrDeZeD,conderrDeZeZ,conderrDeZeDZ]
-LAB2 = [suptype,'Delta','Zeta','Delta+zeta']
-j=-1
-for LAB in ['cov','covDelta','covZeta','covDelta+zeta']:
-  j+=1
-  if (Noise==0):
+  RESULTS = [FisherDeZe,FisherDeZeD,FisherDeZeZ,FisherDeZeDZ]
+  RESULTS2 = [errDeZe,errDeZeD,errDeZeZ,errDeZeDZ]
+  RESULTS3 = [conderrDeZe,conderrDeZeD,conderrDeZeZ,conderrDeZeDZ]
+  LAB2 = [suptype,'Delta','Zeta','Delta+zeta']
+  j=-1
+  for LAB in ['cov','covDelta','covZeta','covDelta+zeta']:
+    j+=1
+    if (Noise==0):
       f=open(LAB+suptype+'_'+BINNES+'NN.dat','wb')
-  elif (Noise==1):
+    elif (Noise==1):
       f=open(LAB+suptype+'_'+BINNES+'.dat','wb')
-  savetxt(f,inv(RESULTS[j])[0:len(params)-Marg,0:len(params)-Marg])
-  f.close()
+    savetxt(f,inv(RESULTS[j])[0:len(params)-Marg,0:len(params)-Marg])
+    f.close()
 
-  if (Noise==0):
+    if (Noise==0):
       f=open(LAB2[j]+'_fisher_'+BINNES+'NN.dat','w')
-  elif (Noise==1):
+    elif (Noise==1):
       f=open(LAB2[j]+'_fisher_'+BINNES+'.dat','w')
-  headerline = '#Fiducial model ('
-  for par in params:#pDic[0:nParsLess]: #Another part to be adapted when marginalizing is done [TBC].
+    headerline = '#Fiducial model ('
+    for par in params:#pDic[0:nParsLess]: #Another part to be adapted when marginalizing is done [TBC].
         headerline+=par+','
 
-  '''
+    '''
   #Marginalisation component [TBC].
   if (Fix!=0):
       Marg = Fix
@@ -1020,22 +1024,22 @@ for LAB in ['cov','covDelta','covZeta','covDelta+zeta']:
           headerline = headerline +','+ 'bff'+str(i+1) 
       else:
           headerline = headerline+',' + 'bff'+str(i+1) 
-  '''
+    '''
 
-  f.write(headerline+'): \n')
-  for i in range(len(params)-Marg):
+    f.write(headerline+'): \n')
+    for i in range(len(params)-Marg):
       f.write(str(round(params[Keys[i]],10))+' ')
     
-  f.write('\n \n')    
-  f.write('#Marginalised errors: \n')
-  for i in range(len(params)-Marg):
+    f.write('\n \n')    
+    f.write('#Marginalised errors: \n')
+    for i in range(len(params)-Marg):
       f.write(str(round(RESULTS2[j][i],10))+' ')  
 
-  f.write('\n \n')    
-  f.write('#Conditional errors: \n')
-  for i in range(len(params)-Marg):
+    f.write('\n \n')    
+    f.write('#Conditional errors: \n')
+    for i in range(len(params)-Marg):
       f.write(str(round(RESULTS3[j][i],10))+' ') 
 
-  f.close()
+    f.close()
 
-print('Elapsed time: ', time.time()-start, 's')
+  print('Elapsed time: ', time.time()-start, 's')
