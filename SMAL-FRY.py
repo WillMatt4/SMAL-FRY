@@ -112,7 +112,7 @@ RUN_FISHER = 0                                    # Should the Fisher analysis b
 CLASSPATH = '/home/users/m/matthews/scratch/Zeta/SMAL-FRY/class_public-3.0.1_mod/' #
 OUTPATH = '/home/users/m/matthews/scratch/Zeta/outputs/' #
 NO = '00'                                         # This Number relates to the filename and numbering scheme of the input CLASS spectra.
-
+ 
 #################
 #INITIALIZATIONS:
 #################
