@@ -10,8 +10,8 @@
 
 ##SBATCH --exclude=cpu[116-119]
 
-#SBATCH --ntasks=6
-#SBATCH --cpus-per-task=1  
+#SBATCH --ntasks=1#6
+##SBATCH --cpus-per-task=1  
 ##SBATCH --time=24:00:00
 
 ##SBATCH --mail-type=ALL
@@ -36,11 +36,11 @@ echo ""
 #module load GCCcore/8.3.0
 #module load glibc/2.30
 #module load Anaconda3
-module load GCC/10.2.0
-module load OpenMPI/4.0.5
+##module load GCC/10.2.0
+##module load OpenMPI/4.0.5
 #module load foss
 #conda activate myenv
-module load mpi4py/3.0.3-timed-pingpong
+##module load mpi4py/3.0.3-timed-pingpong
 #module load numpy/1.18.5-Python-3.6.6
 #module load scipy/1.4.1-Python-3.7.4
 
