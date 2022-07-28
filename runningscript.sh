@@ -41,8 +41,8 @@ module load OpenMPI/4.0.5
 #module load foss
 #conda activate myenv
 module load mpi4py/3.0.3-timed-pingpong
-module load numpy/1.18.5-Python-3.6.6
-module load scipy/1.4.1-Python-3.7.4
+#module load numpy/1.18.5-Python-3.6.6
+#module load scipy/1.4.1-Python-3.7.4
 
 #echo "Loaded Anaconda3 and foss"
 echo ""
