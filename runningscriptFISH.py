@@ -16,7 +16,7 @@
 
 ##SBATCH --mail-type=ALL
 
-#SBATCH -J deltazeta_vanilla_fisher##test0##rdn0_1000
+#SBATCH -J deltazeta_fisher##test0##rdn0_1000
 #SBATCH --output=slurm-%x-%J.out
 
 
