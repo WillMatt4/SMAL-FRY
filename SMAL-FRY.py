@@ -429,7 +429,7 @@ def RUNCLASS(signV,params,key):
        f.write('write background = no\n')      
        f.write('write parameters = no\n')
     f.write('selection_magnification_bias = '+selectionmagbiass+'\n')
-    f.write('root = '+SpectraPath+suptype+'_'+key+'_'+signV+'_'+'\n')
+    f.write('root = '+SpectraPath+suptype+'_'+key+'_'+signV+'_'+NO+'\n')
     f.close()
     
     system('(cd '+CLASSPATH+' && exec ./class '+suptype+'_'+key+'_'+signV+'.ini)')
@@ -439,7 +439,7 @@ def RUNCLASS(signV,params,key):
 def ExtractClDz(key,signV,zbar):
 # This function is used to extract \Delta, \zeta and cross spectra:
 
-    data2 = np.loadtxt(SpectraPath+suptype+'_'+key+'_'+signV+'_'+NO+'_cl.dat')
+    data2 = np.loadtxt(SpectraPath+suptype+'_'+key+'_'+signV+'_'+NO+'00_cl.dat')
     N2do4 = int(N[Tracer]**2/4)
     Cl_fz_zi_fz_zj = [[0 for j in range(N2do4)] for i in range(N2do4)] #extract the element like C[i][j] 
     Cl_fz_zi_f_zj = [[0 for j in range(N2do4)] for i in range(N2do4)]
@@ -509,7 +509,7 @@ def SaveClDz(key,signV,Cl_di_dj,Cl_di_zj,Cl_zi_dj,Cl_zi_zj):
 # l = lmax
 
     Nsumo2 = int(Nsum/2)
-    f=open(SpectraPath+suptype+'_'+key+'_'+signV+'_'+NO+'_cl_Delta_zeta.dat','w')
+    f=open(SpectraPath+suptype+'_'+key+'_'+signV+'_'+NO+'00_cl_Delta_zeta.dat','w')
     f.write(finalheader+'\n')
     for ell in range(2,lmax+1):
        f.write(str(ell)+' ')
@@ -572,7 +572,7 @@ if RUN_SPECTRA==1:
 ################################
 if EXTRACT_ZETA==1:  
   
-  Z,Ch,Hub,D,f  = np.genfromtxt(SpectraPath+suptype+'__'+'fiducial_'+NO+'_background.dat',unpack=True,usecols = [0,4,3,17,18])
+  Z,Ch,Hub,D,f  = np.genfromtxt(SpectraPath+suptype+'__'+'fiducial_'+NO+'00_background.dat',unpack=True,usecols = [0,4,3,17,18])
 
   Dofz = interpolate.interp1d(Z, D, kind='cubic',axis = 0)    #Mpc
   fofz = interpolate.interp1d(Z, f, kind='cubic',axis = 0)    #Mpc
@@ -614,20 +614,20 @@ if RUN_FISHER==1:
   print('Reading from: '+filedir)
 
   nono=0
-  if(path.exists(filedir+suptype+'__fiducial_'+NO+'_cl_Delta_zeta.dat')==False):
+  if(path.exists(filedir+suptype+'__fiducial_'+NO+'00_cl_Delta_zeta.dat')==False):
     print('Missing fiducial spectra\n')
 
   for par in params:
-    if(path.exists(filedir+suptype+'_'+par+'_minus1_'+NO+'_cl_Delta_zeta.dat')==False):
+    if(path.exists(filedir+suptype+'_'+par+'_minus1_'+NO+'00_cl_Delta_zeta.dat')==False):
         print('Missing spectra for: '+par+'-*step\n')
         nono+=1
-    if(path.exists(filedir+suptype+'_'+par+'_plus1_'+NO+'_cl_Delta_zeta.dat')==False):
+    if(path.exists(filedir+suptype+'_'+par+'_plus1_'+NO+'00_cl_Delta_zeta.dat')==False):
         print('Missing spectra for: '+par+'+*step\n')
         nono+=1
-    if(path.exists(filedir+suptype+'_'+par+'_minus2_'+NO+'_cl_Delta_zeta.dat')==False):
+    if(path.exists(filedir+suptype+'_'+par+'_minus2_'+NO+'00_cl_Delta_zeta.dat')==False):
         print('Missing spectra for: '+par+'-2*step\n')
         nono+=1
-    if(path.exists(filedir+suptype+'_'+par+'_plus2_'+NO+'_cl_Delta_zeta.dat')==False):
+    if(path.exists(filedir+suptype+'_'+par+'_plus2_'+NO+'00_cl_Delta_zeta.dat')==False):
         print('Missing spectra for: '+par+'+2*step\n')
         nono+=1
     if nono>=1:
@@ -649,7 +649,7 @@ for i in range(4,Nsum+3+1):
 
   if Nsum>0:
 
-    Tr=loadtxt(filedir+suptype+'_'+'_fiducial'+'_'+NO+'_cl_Delta_zeta.dat',usecols = Col)
+    Tr=loadtxt(filedir+suptype+'_'+'_fiducial'+'_'+NO+'00_cl_Delta_zeta.dat',usecols = Col)
     Tr_m = []
     Tr_p = []
 
@@ -660,19 +660,19 @@ for i in range(4,Nsum+3+1):
 
     for par in params:##pDic[0:nParsLess]:  #When properly included, marginalization will involve a change here [TBC].
 
-      Tr_m.append(loadtxt(filedir+suptype+'_'+par+'_minus1_'+NO+'_cl_Delta_zeta.dat',usecols = Col))
-      Tr_p.append(loadtxt(filedir+suptype+'_'+par+'_plus1_'+NO+'_cl_Delta_zeta.dat',usecols = Col))
+      Tr_m.append(loadtxt(filedir+suptype+'_'+par+'_minus1_'+NO+'00_cl_Delta_zeta.dat',usecols = Col))
+      Tr_p.append(loadtxt(filedir+suptype+'_'+par+'_plus1_'+NO+'00_cl_Delta_zeta.dat',usecols = Col))
 
       if stencil==5:
-        Tr_m2.append(loadtxt(filedir+suptype+'_'+par+'_minus2_'+NO+'_cl_Delta_zeta.dat',usecols = Col))
-        Tr_p2.append(loadtxt(filedir+suptype+'_'+par+'_plus2_'+NO+'_cl_Delta_zeta.dat',usecols = Col))
+        Tr_m2.append(loadtxt(filedir+suptype+'_'+par+'_minus2_'+NO+'00_cl_Delta_zeta.dat',usecols = Col))
+        Tr_p2.append(loadtxt(filedir+suptype+'_'+par+'_plus2_'+NO+'00_cl_Delta_zeta.dat',usecols = Col))
 
 ###############################################
 #Background cosmological data for lmax cut-off:
 ###############################################
 # z-dependent lmax: In its current state, the code will use a fixed maximum ell equal to the value of 'lmax', this is because an lmax based on kmax*Chi(z) might become fairly large for higher redshifts and is not conducive for testing with the minimal example. Once you are convinced the code is correctly set-up, you can turn the z-dependent lmax cut-off on, by commenting out the line 'Lmax_Tr = [lmax for z in zmeans]' below and uncommenting the line 'Lmax_Tr = [int(kmax*Chif(z)) for z in zmeans]'. 
 
-  Z,Ch,Hub,D,f  = np.genfromtxt(SpectraPath+suptype+'__'+'fiducial_'+NO+'_background.dat',unpack=True,usecols = [0,4,3,17,18])
+  Z,Ch,Hub,D,f  = np.genfromtxt(SpectraPath+suptype+'__'+'fiducial_'+NO+'00_background.dat',unpack=True,usecols = [0,4,3,17,18])
 
   Dofz = interpolate.interp1d(Z, D, kind='cubic',axis = 0)    #Mpc
   fofz = interpolate.interp1d(Z, f, kind='cubic',axis = 0)    #Mpc
