@@ -10,7 +10,7 @@
 
 ##SBATCH --exclude=cpu[116-119]
 
-#SBATCH --ntasks=5
+#SBATCH --ntasks=6
 #SBATCH --cpus-per-task=1  
 ##SBATCH --time=24:00:00
 
@@ -38,9 +38,10 @@ echo ""
 module load Anaconda3
 #module load GCC/11.3.0
 #module load OpenMPI/4.1.4
-module load foss
+#module load foss
+#conda activate myenv
 
-echo "Loaded Anaconda3 and foss"
+#echo "Loaded Anaconda3 and foss"
 echo ""
 
 # # #OpenMP settings:
