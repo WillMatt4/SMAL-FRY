@@ -538,6 +538,7 @@ if RUN_SPECTRA==1:
     
   #FIDUCIAL:
   ##########
+  itr = mpi.rank
   if itr==0:
       Spectra(0,params,'')
       fidrunQ=1
@@ -545,7 +546,6 @@ if RUN_SPECTRA==1:
   mpi.barrier #wait for fiducial run to complete (background to be generated)
     
   if itr!=0:  
-      itr = mpi.rank
       key = Keys[itr-1]
   #PLUS STEP:
   ###########
@@ -584,13 +584,12 @@ for i in range(len(zs)):
 #Read and Initialize background
 ################################
 if EXTRACT_ZETA==1:
-    
+  itr = mpi.rank
   if itr==0:  
     Cl_di_dj,Cl_di_zj,Cl_zi_dj,Cl_zi_zj = ExtractClDz('','fiducial',zbars)
     SaveClDz('','fiducial',Cl_di_dj,Cl_di_zj,Cl_zi_dj,Cl_zi_zj)
 
-  if itr!=0:  
-   itr = mpi.rank
+  if itr!=0:   
    key = Keys[itr-1]
    for signV in ['minus1','plus1','minus2','plus2']:
       Cl_di_dj,Cl_di_zj,Cl_zi_dj,Cl_zi_zj=ExtractClDz(key,signV,zbars)
