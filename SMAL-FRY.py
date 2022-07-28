@@ -1001,16 +1001,16 @@ plt.show()
   for LAB in ['cov','covDelta','covZeta','covDelta+zeta']:
     j+=1
     if (Noise==0):
-      f=open(LAB+suptype+'_'+BINNES+'NN.dat','wb')
+      f=open(SpectraPath+LAB+suptype+'_'+BINNES+'NN.dat','wb')
     elif (Noise==1):
-      f=open(LAB+suptype+'_'+BINNES+'.dat','wb')
+      f=open(SpectraPath+LAB+suptype+'_'+BINNES+'.dat','wb')
     savetxt(f,np.linalg.inv(RESULTS[j])[0:len(params)-Marg,0:len(params)-Marg])
     f.close()
 
     if (Noise==0):
-      f=open(LAB2[j]+'_fisher_'+BINNES+'NN.dat','w')
+      f=open(SpectraPath+LAB2[j]+'_fisher_'+BINNES+'NN.dat','w')
     elif (Noise==1):
-      f=open(LAB2[j]+'_fisher_'+BINNES+'.dat','w')
+      f=open(SpectraPath+LAB2[j]+'_fisher_'+BINNES+'.dat','w')
     headerline = '#Fiducial model ('
     for par in params:#pDic[0:nParsLess]: #Another part to be adapted when marginalizing is done [TBC].
         headerline+=par+','
