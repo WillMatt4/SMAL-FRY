@@ -341,9 +341,9 @@ def Spectra(steptype,params,key):
     else:
         params0[key]=params0[key]*(1+steptype*step)
         RUNCLASS(signV,params0,key) 
-    itrs = mpi.rank
-    if itrs>0:
-      print(itrs,params0[key],steptype,step)
+    #itrs = mpi.rank
+    #if itrs>0:
+      #print(itrs,params0[key],steptype,step)
 def RUNCLASS(signV,params,key):
 # This function is responsible for running the CLASS code to generate and save the necessary \Delta spectra.
     if signV=='fiducial':
