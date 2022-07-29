@@ -340,7 +340,6 @@ def Spectra(steptype,params,key):
         RUNCLASS(signV,params0,key)
     else:
         params0[key]=params0[key]*(1+steptype*step)
-        print(itr,params0[key],steptype,step)
         RUNCLASS(signV,params0,key) 
 
 def RUNCLASS(signV,params,key):
@@ -542,6 +541,7 @@ if RUN_SPECTRA==1:
   #FIDUCIAL:
   ##########
   itr = mpi.rank
+  print(itr,params0[key],steptype,step)
   if itr==0:
       Spectra(0,params,'')
 
