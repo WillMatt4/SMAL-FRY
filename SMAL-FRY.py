@@ -543,7 +543,6 @@ if RUN_SPECTRA==1:
   itr = mpi.rank
   if itr==0:
       Spectra(0,params,'')
-      fidrunQ=1
 
   mpi.barrier #wait for fiducial run to complete (background to be generated)
     
