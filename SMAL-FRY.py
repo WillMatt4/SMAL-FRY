@@ -329,7 +329,8 @@ Tracer = WHICHTRACERS[0] # Fixed here because we only have one tracer, [TBC] for
 def Spectra(steptype,params,key):
 # This function attributes the kind of spectrum (fiducial, +/- 1*step, +/- 2*step to be generated, and calls RUNCLASS() to generate it.)
     itrs = mpi.rank
-    print(itrs,params[key],steptype,step)
+    if itrs>0:
+      print(itrs,params[key],steptype,step)
     params0=params.copy()
     if steptype<0:
        signV = 'minus'+str(abs(steptype))
