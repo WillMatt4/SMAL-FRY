@@ -408,11 +408,11 @@ def RUNCLASS(signV,params,key):
     f.write('omega_cdm = '+str(params['wc'])+'\n') 
 
     #Minimal example background parameters:
-    f.write('ln10^{10}A_s = '+str(3.0448)+'\n') 
-    f.write('n_s = '+str(0.96605)+'\n') 
+    #f.write('ln10^{10}A_s = '+str(3.0448)+'\n') 
+    #f.write('n_s = '+str(0.96605)+'\n') 
     #Otherwise:
-    #f.write('ln10^{10}A_s = '+str(params['logAs'])+'\n') 
-    #f.write('n_s = '+str(params['ns'])+'\n') 
+    f.write('ln10^{10}A_s = '+str(params['logAs'])+'\n') 
+    f.write('n_s = '+str(params['ns'])+'\n') 
 
     f.write('k_pivot = '+str(0.05)+'\n') 
     f.write('number count contributions = density, rsd, lensing, gr\n') 
