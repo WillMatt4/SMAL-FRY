@@ -1,6 +1,6 @@
 #!/bin/sh
 ##up to 12h:
-##SBATCH --partition=shared-cpu
+#SBATCH --partition=shared-cpu
 ##12h - 4days:
 ##SBATCH --partition=public-cpu
 ##up to 15min:
@@ -12,7 +12,7 @@
 
 #SBATCH --ntasks=1
 ##SBATCH --cpus-per-task=1  
-##SBATCH --time=24:00:00
+#SBATCH --time=00:20:00
 
 ##SBATCH --mail-type=ALL
 
