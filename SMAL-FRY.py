@@ -113,7 +113,7 @@ EXTRACT_ZETA = 1                                  # Should the redshift-weighted
 RUN_FISHER = 0                                    # Should the Fisher analysis be run (DOESN'T REQUIRE MULTIPLE CORES)
 CLASSPATH = '/home/users/m/matthews/scratch/Zeta/SMAL-FRY/class_public-3.0.1_mod/' #
 OUTPATH = '/home/users/m/matthews/scratch/Zeta/outputs/' #
-NO = '02'                                         # This Number relates to the filename and numbering scheme of the input CLASS spectra.
+NO = '00'                                         # This Number relates to the filename and numbering scheme of the input CLASS spectra.
  
 #################
 #INITIALIZATIONS:
@@ -340,6 +340,7 @@ def Spectra(steptype,params,key):
         RUNCLASS(signV,params0,key)
     else:
         params0[key]=params0[key]*(1+steptype*step)
+        print(itr,params0[key],steptype,step)
         RUNCLASS(signV,params0,key) 
 
 def RUNCLASS(signV,params,key):
