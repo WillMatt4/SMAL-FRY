@@ -568,26 +568,27 @@ if RUN_SPECTRA==1:
       
   mpi.barrier
 
+Z,Ch,Hub,D,f  = np.genfromtxt(SpectraPath+suptype+'__'+'fiducial_'+NO+'00_background.dat',unpack=True,usecols = [0,4,3,17,18])
 
-#Read and Initialize background
-################################
-if EXTRACT_ZETA==1:  
-  
-  Z,Ch,Hub,D,f  = np.genfromtxt(SpectraPath+suptype+'__'+'fiducial_'+NO+'00_background.dat',unpack=True,usecols = [0,4,3,17,18])
+Dofz = interpolate.interp1d(Z, D, kind='cubic',axis = 0)    #Mpc
+fofz = interpolate.interp1d(Z, f, kind='cubic',axis = 0)    #Mpc
+Chif = interpolate.interp1d(Z, Ch, kind='cubic',axis = 0)   #Mpc
+Hubf = interpolate.interp1d(Z, Hub, kind='cubic',axis = 0)  #/Mpc
 
-  Dofz = interpolate.interp1d(Z, D, kind='cubic',axis = 0)    #Mpc
-  fofz = interpolate.interp1d(Z, f, kind='cubic',axis = 0)    #Mpc
-  Chif = interpolate.interp1d(Z, Ch, kind='cubic',axis = 0)   #Mpc
-  Hubf = interpolate.interp1d(Z, Hub, kind='cubic',axis = 0)  #/Mpc
-
-  zs = [mean(bins[i]) for i in range(len(bins))]
-  zbars = np.zeros(len(zs))
-  for i in range(len(zs)):
+zs = [mean(bins[i]) for i in range(len(bins))]
+zbars = np.zeros(len(zs))
+for i in range(len(zs)):
      fzi = lambda z: np.exp(-1/2*(z-zs[i])**2/zsigmas[i]**2)/np.sqrt(2*np.pi)/zsigmas[i]*z*Chif(z)**2/Hubf(z)
      fi=  lambda z: np.exp(-1/2*(z-zs[i])**2/zsigmas[i]**2)/np.sqrt(2*np.pi)/zsigmas[i]*Chif(z)**2/Hubf(z)
      # The factor of 30*zsigmas is arbitrary, it must be selected based on the characteristics of the survey and its window functions, so that the numerical integral is not over to large a range that may result in the resolution of the non-zero values of the amplitude being poor. This is the integral note.
      zbars[i]= quad(fzi, max([0,zs[i]-30*zsigmas[i]]), zs[i]+30*zsigmas[i])[0]/quad(fi, max([0,zs[i]-30*zsigmas[i]]), zs[i]+30*zsigmas[i])[0]
 
+
+
+#Read and Initialize background
+################################
+if EXTRACT_ZETA==1:  
+  
 
   itr = mpi.rank
   if itr==0:  
