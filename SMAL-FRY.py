@@ -328,9 +328,6 @@ Tracer = WHICHTRACERS[0] # Fixed here because we only have one tracer, [TBC] for
 
 def Spectra(steptype,params,key):
 # This function attributes the kind of spectrum (fiducial, +/- 1*step, +/- 2*step to be generated, and calls RUNCLASS() to generate it.)
-    itrs = mpi.rank
-    if itrs>0:
-      print(itrs,params[key],steptype,step)
     params0=params.copy()
     if steptype<0:
        signV = 'minus'+str(abs(steptype))
@@ -344,7 +341,9 @@ def Spectra(steptype,params,key):
     else:
         params0[key]=params0[key]*(1+steptype*step)
         RUNCLASS(signV,params0,key) 
-
+    itrs = mpi.rank
+    if itrs>0:
+      print(itrs,params0[key],steptype,step)
 def RUNCLASS(signV,params,key):
 # This function is responsible for running the CLASS code to generate and save the necessary \Delta spectra.
     if signV=='fiducial':
