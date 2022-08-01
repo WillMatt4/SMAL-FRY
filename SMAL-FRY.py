@@ -981,13 +981,13 @@ plt.show()
   conderrDeZeDZ = zeros(len(errDeZeDZ))
 
   if Cond==1:
-      for i in range(len(FisherDeZe)):
+      for i in range(len(FisherDeZe)-Marg):
         conderrDeZe[i] = 1/sqrt(FisherDeZe[i,i])
-      for i in range(len(FisherDeZeD)):
+      for i in range(len(FisherDeZeD)-Marg):
         conderrDeZeD[i] = 1/sqrt(FisherDeZeD[i,i])
-      for i in range(len(FisherDeZeZ)):
+      for i in range(len(FisherDeZeZ)-Marg):
         conderrDeZeZ[i] = 1/sqrt(FisherDeZeZ[i,i])
-      for i in range(len(FisherDeZeDZ)):
+      for i in range(len(FisherDeZeDZ)-Marg):
         conderrDeZeDZ[i] = 1/sqrt(FisherDeZeDZ[i,i])
 
 #Saving of results
