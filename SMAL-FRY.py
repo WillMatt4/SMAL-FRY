@@ -164,7 +164,7 @@ params['b2'] = biasno2[surv[0]]                        #2nd bias parameter
 # The Fix and Marg parameters have NOT been tested in this version of the code and should be checked if used [TBC]. 
 Fix = 0                                          # Number of parameters to fix (remove before inversion) (starting at the parameter with the highest index).
 Marg = 0                                         # Number of parameters to marginalise (remove after inversion) over (starting at the parameter with the highest index)
-# Currently, if left as is, the code will produce the conditional and marginalized errors (but no additional parameters are marginalized over).
+# Currently, if left as default (0), the code will produce the conditional and marginalized errors (but no additional parameters are marginalized over).
 Cond = 1                                         # Should conditional errors be found? YES: 1, NO: 0.
 
 
@@ -663,7 +663,7 @@ for i in range(4,Nsum+3+1):
       Tr_p2 = []
 
 
-    for par in params:##pDic[0:nParsLess]:  #When properly included, marginalization will involve a change here [TBC].
+    for par in params:#[Keys[0:nParsLess]]: 
 
       Tr_m.append(loadtxt(filedir+suptype+'_'+par+'_minus1_'+NO+'00_cl_Delta_zeta.dat',usecols = Col))
       Tr_p.append(loadtxt(filedir+suptype+'_'+par+'_plus1_'+NO+'00_cl_Delta_zeta.dat',usecols = Col))
@@ -1019,20 +1019,20 @@ plt.show()
     elif (Noise==1):
       f=open(SpectraPath+LAB2[j]+'_fisher_'+BINNES+'.dat','w')
     headerline = '#Fiducial model ('
-    for par in params:#pDic[0:nParsLess]: #Another part to be adapted when marginalizing is done [TBC].
+    for par in params[Keys[0:nParsLess]]: 
         headerline+=par+','
 
-    '''
-  #Marginalisation component [TBC].
-  if (Fix!=0):
-      Marg = Fix
-  if (Marg!=1):
-    for i in range(Nsum):
-      if (i==Nsum-1-Marg):
-          headerline = headerline +','+ 'bff'+str(i+1) 
-      else:
-          headerline = headerline+',' + 'bff'+str(i+1) 
-    '''
+    
+    #Marginalisation component [TBC].
+    if (Fix!=0):
+        Marg = Fix
+    if (Marg!=1):
+      for i in range(Nsum):
+        if (i==Nsum-1-Marg):
+          headerline = headerline +','+ 'b'+str(i+1) 
+        else:
+          headerline = headerline+',' + 'b'+str(i+1) 
+    
 
     f.write(headerline+'): \n')
     for i in range(len(params)-Marg):
