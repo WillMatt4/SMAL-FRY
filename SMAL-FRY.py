@@ -163,7 +163,7 @@ params['b2'] = biasno2[surv[0]]                        #2nd bias parameter
 # NB! ONLY MAXIMUM OF ONE (Marg OR Fix) MAY BE NON-ZERO:
 # The Fix and Marg parameters have NOT been tested in this version of the code and should be checked if used [TBC]. 
 Fix = 0                                          # Number of parameters to fix (remove before inversion) (starting at the parameter with the highest index).
-Marg = 0                                         # Number of parameters to marginalise (remove after inversion) over (starting at the parameter with the highest index)
+Marg = 2                                         # Number of parameters to marginalise (remove after inversion) over (starting at the parameter with the highest index)
 # Currently, if left as default (0), the code will produce the conditional and marginalized errors (but no additional parameters are marginalized over).
 Cond = 1                                         # Should conditional errors be found? YES: 1, NO: 0.
 
@@ -175,7 +175,7 @@ for i in range(len(Lmin_TrPre)):
     Lmin_Tr += [Lmin_TrPre[i] for j in range(N[i])]
 
 fskydegsq = [15000,30000]                        # The sky coverage of each survey in deg^2 
-nParsLess = 7                                    #Number of parameters excluding parameters to be marginalised over. This part of the code is not yet active [TBC].
+nParsLess = 5                                    #Number of parameters excluding parameters to be marginalised over. This part of the code is not yet active [TBC].
 
 SpectraPath = OUTPATH+'spectra/'+suptype+'/'   # Path to the CLASS-generated spectra. If the earlier instructions about labelling are followed, this can be left unchanged. 
 f=open(suptype+'_fiducial_params.dat','w')
