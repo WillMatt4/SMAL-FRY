@@ -1019,8 +1019,8 @@ plt.show()
     elif (Noise==1):
       f=open(SpectraPath+LAB2[j]+'_fisher_'+BINNES+'.dat','w')
     headerline = '#Fiducial model ('
-    for par in params[Keys[0:nParsLess]]: 
-        headerline+=par+','
+    for key in Keys[0:nParsLess]: 
+        headerline+=params[key]+','
 
     
     #Marginalisation component [TBC].
