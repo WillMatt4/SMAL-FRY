@@ -1020,7 +1020,7 @@ plt.show()
       f=open(SpectraPath+LAB2[j]+'_fisher_'+BINNES+'.dat','w')
     headerline = '#Fiducial model ('
     for key in Keys[0:nParsLess]: 
-        headerline+=params[key]+','
+        headerline+=key+','
 
     
     #Marginalisation component [TBC].
