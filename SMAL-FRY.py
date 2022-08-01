@@ -108,9 +108,9 @@ start=time.time()
 ################################
 #COSMOLOGY AND INPUTS FOR CLASS:
 ################################
-RUN_SPECTRA = 1                                   # Should CLASS be used to generate the necessary spectra? YES: 1, NO: 0.
-EXTRACT_ZETA = 1                                  # Should the redshift-weighted number count power spectrum? YES: 1, NO: 0.
-RUN_FISHER = 0                                    # Should the Fisher analysis be run (DOESN'T REQUIRE MULTIPLE CORES)
+RUN_SPECTRA = 0                                   # Should CLASS be used to generate the necessary spectra? YES: 1, NO: 0.
+EXTRACT_ZETA = 0                                  # Should the redshift-weighted number count power spectrum? YES: 1, NO: 0.
+RUN_FISHER = 1                                    # Should the Fisher analysis be run (DOESN'T REQUIRE MULTIPLE CORES)
 CLASSPATH = '/home/users/m/matthews/scratch/Zeta/SMAL-FRY/class_public-3.0.1_mod/' #
 OUTPATH = '/home/users/m/matthews/scratch/Zeta/outputs/' #
 NO = '01'                                         # This Number relates to the filename and numbering scheme of the input CLASS spectra.
@@ -175,7 +175,7 @@ for i in range(len(Lmin_TrPre)):
     Lmin_Tr += [Lmin_TrPre[i] for j in range(N[i])]
 
 fskydegsq = [15000,30000]                        # The sky coverage of each survey in deg^2 
-nParsLess = 8                                    #Number of parameters excluding parameters to be marginalised over. This part of the code is not yet active [TBC].
+nParsLess = 7                                    #Number of parameters excluding parameters to be marginalised over. This part of the code is not yet active [TBC].
 
 SpectraPath = OUTPATH+'spectra/'+suptype+'/'   # Path to the CLASS-generated spectra. If the earlier instructions about labelling are followed, this can be left unchanged. 
 f=open(suptype+'_fiducial_params.dat','w')
