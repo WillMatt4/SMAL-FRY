@@ -991,11 +991,12 @@ plt.show()
         conderrDeZeDZ[i] = 1/sqrt(FisherDeZeDZ[i,i])
 
 #Saving of results
+  addi = ''
   if (Marg!=0):
-      suptype=suptype+'_marg'
+      addi += '_marg'
   if (Fix!=0):
-      suptype=suptype+'_fixd'
-
+      addi += '_fixd'
+    
   BINNES = ''
   for i in WHICHTRACERS:
       BINNES+=str(int(N[i]/2))+'bin'+subctype[i]
@@ -1003,14 +1004,14 @@ plt.show()
   RESULTS = [FisherDeZe,FisherDeZeD,FisherDeZeZ,FisherDeZeDZ]
   RESULTS2 = [errDeZe,errDeZeD,errDeZeZ,errDeZeDZ]
   RESULTS3 = [conderrDeZe,conderrDeZeD,conderrDeZeZ,conderrDeZeDZ]
-  LAB2 = [suptype,'Delta','Zeta','Delta+zeta']
+  LAB2 = [suptype+addi,'Delta'+addi,'Zeta'+addi,'Delta+zeta'+addi]
   j=-1
   for LAB in ['cov','covDelta','covZeta','covDelta+zeta']:
     j+=1
     if (Noise==0):
-      f=open(SpectraPath+LAB+suptype+'_'+BINNES+'NN.dat','wb')
+      f=open(SpectraPath+LAB+suptype+addi+'_'+BINNES+'NN.dat','wb')
     elif (Noise==1):
-      f=open(SpectraPath+LAB+suptype+'_'+BINNES+'.dat','wb')
+      f=open(SpectraPath+LAB+suptype+addi+'_'+BINNES+'.dat','wb')
     savetxt(f,np.linalg.inv(RESULTS[j])[0:len(params)-Marg,0:len(params)-Marg])
     f.close()
 
@@ -1027,8 +1028,8 @@ plt.show()
     if (Fix!=0):
         Marg = Fix
     if (Marg!=1):
-      for i in range(Nsum):
-        if (i==Nsum-1-Marg):
+      for i in range(2):
+        if (i==2-Marg):
           headerline = headerline +','+ 'b'+str(i+1) 
         else:
           headerline = headerline+',' + 'b'+str(i+1) 
