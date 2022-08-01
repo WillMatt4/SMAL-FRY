@@ -366,8 +366,8 @@ def RUNCLASS(signV,params,key):
     for i in range(len(bins)):
          
          # Linear bisa b(z) and magnification bias s(z) parameters for input to CLASS.
-         BIASNO = biasno[Tracer]
-         BIASNO2 = biasno2[Tracer]
+         BIASNO = params['b1']
+         BIASNO2 = params['b2']
          s0 = -0.106875
          s1 = 1.35999
          s2 = -0.620008
