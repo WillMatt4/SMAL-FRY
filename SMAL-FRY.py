@@ -153,6 +153,9 @@ Redsig = [0.001,0.001]                           # Redshift accuracy, later shou
 biastype = [2,3]                                 # Linear bias general function form: 0 - Constant bias: b=biasno 1 - DESI bias: b(z) = biasno/D(z) 2 - Euclid bias: b(z) = biasno + biasno2*z 3 - SKAII bias: b(z) = biasno*exp(biasno2*z).
 biasno = [0.79,0.5887] 
 biasno2 = [0.68,0.8130]
+surv = [i+1 for i in range(len(N)) if N[i]>0]
+params['b1'] = biasno[surv[0]]                         #1st bias parameter
+params['b2'] = biasno2[surv[0]]                        #2nd bias parameter
 
 #Noise and Fisher limits:
 #########################
