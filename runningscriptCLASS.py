@@ -1,8 +1,8 @@
 #!/bin/sh
 ##up to 12h:
-#SBATCH --partition=shared-cpu
+##SBATCH --partition=shared-cpu
 ##12h - 4days:
-##SBATCH --partition=public-cpu
+#SBATCH --partition=public-cpu
 ##up to 15min:
 ##SBATCH --partition=debug-cpu
 ##max. of 2 cores for 14 days:
@@ -12,9 +12,9 @@
 
 #SBATCH --ntasks=8
 ##SBATCH --cpus-per-task=1  
-#SBATCH --time=00:20:00
+#SBATCH --time=26:00:00
 
-##SBATCH --mail-type=ALL
+#SBATCH --mail-type=ALL
 
 #SBATCH -J deltazeta##test0##rdn0_1000
 #SBATCH --output=slurm-%x-%J.out
