@@ -31,7 +31,7 @@
 # There is also a "template" file included, namely 'Deltazeta_template.ini', where any remaining CLASS parameters are set that do not need to change between the different surveys.
 #
 # Once the survey specifications have been chosen, the user can run (individually or in one go*) via this python code: the modified CLASS code and the \zeta spectra extraction. 
-# *- By choosing the values of 'RUN_SPECTRA' and 'EXTRACT_ZETA', respectively. It may make sense at the beginning to run the CLASS part alone at first for a smaller run to make sure that accuracy parameters etc. are ideal and the spectra being generated are what they are required to be.
+# *- By choosing the values of 'RUN_eSPECTRA' and 'EXTRACT_ZETA', respectively. It may make sense at the beginning to run the CLASS part alone at first for a smaller run to make sure that accuracy parameters etc. are ideal and the spectra being generated are what they are required to be.
 # The CLASS part will generate \Delta spectra for each bin, using 3 different window functions: 2 for the extraction of the \zeta spectra, and one as the \Delta spectrum with a Gaussian window function. 
 # This means that the eventual 'extracted' spectra will be \Delta_i\Delta_j, \zeta_i\zeta_j, \Delta_i\zeta_j and \zeta_i\Delta_j for (i=j) auto- and (i!=j) cross-correlations of the chosen set of bins centred at redshifts z_i. (I.e. the SAME bins will be used for \Delta and \zeta spectra, which is also the reason why N contains 2x the number of bins for an individual spectra.) 
 #
@@ -109,8 +109,8 @@ start=time.time()
 #COSMOLOGY AND INPUTS FOR CLASS:
 ################################
 RUN_SPECTRA = 0                                   # Should CLASS be used to generate the necessary spectra? YES: 1, NO: 0.
-EXTRACT_ZETA = 0                                  # Should the redshift-weighted number count power spectrum? YES: 1, NO: 0.
-RUN_FISHER = 1                                    # Should the Fisher analysis be run (DOESN'T REQUIRE MULTIPLE CORES)
+EXTRACT_ZETA = 1                                  # Should the redshift-weighted number count power spectrum? YES: 1, NO: 0.
+RUN_FISHER = 0                                    # Should the Fisher analysis be run (DOESN'T REQUIRE MULTIPLE CORES)
 CLASSPATH = '/home/users/m/matthews/scratch/Zeta/SMAL-FRY/class_public-3.0.1_mod/' #
 OUTPATH = '/home/users/m/matthews/scratch/Zeta/outputs/' #
 NO = '03'                                         # This Number relates to the filename and numbering scheme of the input CLASS spectra.
@@ -593,19 +593,25 @@ for i in range(len(zs)):
 ################################
 if EXTRACT_ZETA==1:  
   
-
-  itr = mpi.rank
-  if itr==0:  
-    Cl_di_dj,Cl_di_zj,Cl_zi_dj,Cl_zi_zj = ExtractClDz('','fiducial',zbars)
-    SaveClDz('','fiducial',Cl_di_dj,Cl_di_zj,Cl_zi_dj,Cl_zi_zj)
-
-  if itr!=0:   
-   key = Keys[itr-1]
+   key = Keys[7-1]
    for signV in ['minus1','plus1','minus2','plus2']:
       Cl_di_dj,Cl_di_zj,Cl_zi_dj,Cl_zi_zj=ExtractClDz(key,signV,zbars)
       SaveClDz(key,signV,Cl_di_dj,Cl_di_zj,Cl_zi_dj,Cl_zi_zj)
 
-   mpi.barrier
+   
+
+  #itr = mpi.rank
+  #if itr==0:  
+  #  Cl_di_dj,Cl_di_zj,Cl_zi_dj,Cl_zi_zj = ExtractClDz('','fiducial',zbars)
+  #  SaveClDz('','fiducial',Cl_di_dj,Cl_di_zj,Cl_zi_dj,Cl_zi_zj)
+
+  #if itr!=0:   
+  # key = Keys[itr-1]
+  # for signV in ['minus1','plus1','minus2','plus2']:
+  #    Cl_di_dj,Cl_di_zj,Cl_zi_dj,Cl_zi_zj=ExtractClDz(key,signV,zbars)
+  #    SaveClDz(key,signV,Cl_di_dj,Cl_di_zj,Cl_zi_dj,Cl_zi_zj)
+
+  # mpi.barrier
 
 ###############################
 #LET THE FISHERING COMMENCE!!!#
