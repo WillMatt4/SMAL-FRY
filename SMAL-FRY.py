@@ -545,7 +545,7 @@ if RUN_SPECTRA==1:
     
   #FIDUCIAL:
   ##########
-  #itr = mpi.rank
+  itr = mpi.rank
   #if itr==0:
   #    Spectra(0,params,'')
   #
