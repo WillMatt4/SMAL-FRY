@@ -57,7 +57,7 @@ echo ""
 
 #launch simulations
 srun python3 SMAL-FRY.py
-
+wait
 echo ""
 echo "***** DONE *****"
 echo `date '+%F %H:%M:%S'`
