@@ -109,8 +109,8 @@ start=time.time()
 #COSMOLOGY AND INPUTS FOR CLASS:
 ################################
 RUN_SPECTRA = 0                                   # Should CLASS be used to generate the necessary spectra? YES: 1, NO: 0.
-EXTRACT_ZETA = 1                                  # Should the redshift-weighted number count power spectrum? YES: 1, NO: 0.
-RUN_FISHER = 0                                    # Should the Fisher analysis be run (DOESN'T REQUIRE MULTIPLE CORES)
+EXTRACT_ZETA = 0                                  # Should the redshift-weighted number count power spectrum? YES: 1, NO: 0.
+RUN_FISHER = 1                                    # Should the Fisher analysis be run (DOESN'T REQUIRE MULTIPLE CORES)
 CLASSPATH = '/home/users/m/matthews/scratch/Zeta/SMAL-FRY/class_public-3.0.1_mod/' #
 OUTPATH = '/home/users/m/matthews/scratch/Zeta/outputs/' #
 NO = '03'                                         # This Number relates to the filename and numbering scheme of the input CLASS spectra.
@@ -593,24 +593,17 @@ for i in range(len(zs)):
 ################################
 if EXTRACT_ZETA==1:  
   
-  
-  key = Keys[7-1]
-  for signV in ['minus1','plus1','minus2','plus2']:
+
+  itr = mpi.rank
+  if itr==0:  
+    Cl_di_dj,Cl_di_zj,Cl_zi_dj,Cl_zi_zj = ExtractClDz('','fiducial',zbars)
+    SaveClDz('','fiducial',Cl_di_dj,Cl_di_zj,Cl_zi_dj,Cl_zi_zj)
+
+  if itr!=0:   
+   key = Keys[itr-1]
+   for signV in ['minus1','plus1','minus2','plus2']:
       Cl_di_dj,Cl_di_zj,Cl_zi_dj,Cl_zi_zj=ExtractClDz(key,signV,zbars)
       SaveClDz(key,signV,Cl_di_dj,Cl_di_zj,Cl_zi_dj,Cl_zi_zj)
-
- 
-
-  #itr = mpi.rank
-  #if itr==0:  
-  #  Cl_di_dj,Cl_di_zj,Cl_zi_dj,Cl_zi_zj = ExtractClDz('','fiducial',zbars)
-  #  SaveClDz('','fiducial',Cl_di_dj,Cl_di_zj,Cl_zi_dj,Cl_zi_zj)
-
-  #if itr!=0:   
-  # key = Keys[itr-1]
-  # for signV in ['minus1','plus1','minus2','plus2']:
-  #    Cl_di_dj,Cl_di_zj,Cl_zi_dj,Cl_zi_zj=ExtractClDz(key,signV,zbars)
-  #    SaveClDz(key,signV,Cl_di_dj,Cl_di_zj,Cl_zi_dj,Cl_zi_zj)
 
    mpi.barrier
 
