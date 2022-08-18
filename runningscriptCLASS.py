@@ -10,7 +10,7 @@
 
 ##SBATCH --exclude=cpu[116-119]
 
-#SBATCH --ntasks=8 
+#SBATCH --ntasks=7 
 ## 5 params + fiducial + 2 bias 
 ##SBATCH --cpus-per-task=3  
 #SBATCH --time=26:00:00
