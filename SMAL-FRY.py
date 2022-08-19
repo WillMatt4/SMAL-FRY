@@ -545,14 +545,15 @@ if RUN_SPECTRA==1:
   #FIDUCIAL:
   ##########
   itr = mpi.rank
-  if itr==0:
-      Spectra(0,params,'')
+  #if itr==0:
+  #    Spectra(0,params,'')
   
-  mpi.barrier #wait for fiducial run to complete (background to be generated)
+  #mpi.barrier #wait for fiducial run to complete (background to be generated)
     
-  if itr!=0:  
-  #if itr>=0:  
-      key = Keys[itr-1]
+  #if itr!=0:  
+  if itr>=0:  
+      #key = Keys[itr-1]
+      key = Keys[itr]
   #PLUS STEP:
   ###########
       Spectra(1,params,key)
