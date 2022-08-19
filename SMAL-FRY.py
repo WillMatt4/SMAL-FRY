@@ -136,20 +136,6 @@ kmax = 0.2                                       # Wave number [Mpc^-1] relating
 #Fisher and Survey parameters:  
 ##############################
 
-#in results will be quoted considering case ”D” below, and the
-other strategies will be used to investigate in greater detail certain aspects of these results.
-• “A” - Only equal redshift correlations of ∆&ζ (∆ − ∆, ζ − ζ, and cross-spectra correlations).
-By comparing with the other forecasts, forecast A allows us to examine the benefit of including
-cross-correlations, balanced against the disadvantage of shot noise.
-• “B” - All ∆&ζ correlations, `max = 300 for every bin.
-• “C” - All ∆&ζ correlations, `max = 600 for every bin.
-As `max increases, more power from small-scale fluctuations is included in the Fisher information.
-By examining two different `max’s in forecasts B and C, we can determine how sensitive the ζ
-spectrum is to various scales, and whether or not an increase in the extent of the scales considered
-makes as dramatic an improvement to the constraints as for the ∆ spectrum.
-• “D” - All ∆&ζ correlations, `max,i = kmax r(zi) for the ith bin, where zi is the central redshift
-of the ith bin and kmax = 0.2 Mpc−1. The `max’s for each bin and each of the surveys
-consid
 # The way that the code deals with different surveys is that the user inputs all the relevant parameters which can be stored and then accessed by changing the values of the variables "NO" and "N". The former controls the CLASS spectra that are read-in and the latter controls the chosen survey. More specifically, the user sets the parameters for the nth survey in the nth element of the various arrays in this section, controlling which survey is used in the forecast by setting the corresponding element for the number of bins in "N" to a value>0, and the rest to 0.
 # Currently, with the addition of the redshift-weighted number count power spectrum, the code does not completely support multi-tracer forecasts [TBC], though this generalisation should be fairly straight-forward. 
 #
