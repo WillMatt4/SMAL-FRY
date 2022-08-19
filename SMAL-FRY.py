@@ -108,12 +108,12 @@ start=time.time()
 ################################
 #COSMOLOGY AND INPUTS FOR CLASS:
 ################################
-RUN_SPECTRA = 0                                   # Should CLASS be used to generate the necessary spectra? YES: 1, NO: 0.
-EXTRACT_ZETA = 0                                  # Should the redshift-weighted number count power spectrum? YES: 1, NO: 0.
-RUN_FISHER = 1                                    # Should the Fisher analysis be run (DOESN'T REQUIRE MULTIPLE CORES)
+RUN_SPECTRA = 1                                   # Should CLASS be used to generate the necessary spectra? YES: 1, NO: 0.
+EXTRACT_ZETA = 1                                  # Should the redshift-weighted number count power spectrum? YES: 1, NO: 0.
+RUN_FISHER = 0                                    # Should the Fisher analysis be run (DOESN'T REQUIRE MULTIPLE CORES)
 CLASSPATH = '/home/users/m/matthews/scratch/Zeta/SMAL-FRY/class_public-3.0.1_mod/' #
 OUTPATH = '/home/users/m/matthews/scratch/Zeta/outputs/' #
-NO = '03'                                         # This Number relates to the filename and numbering scheme of the input CLASS spectra.
+NO = '04'                                         # This Number relates to the filename and numbering scheme of the input CLASS spectra.
  
 #################
 #INITIALIZATIONS:
@@ -136,7 +136,20 @@ kmax = 0.2                                       # Wave number [Mpc^-1] relating
 #Fisher and Survey parameters:  
 ##############################
 
-#
+#in results will be quoted considering case ”D” below, and the
+other strategies will be used to investigate in greater detail certain aspects of these results.
+• “A” - Only equal redshift correlations of ∆&ζ (∆ − ∆, ζ − ζ, and cross-spectra correlations).
+By comparing with the other forecasts, forecast A allows us to examine the benefit of including
+cross-correlations, balanced against the disadvantage of shot noise.
+• “B” - All ∆&ζ correlations, `max = 300 for every bin.
+• “C” - All ∆&ζ correlations, `max = 600 for every bin.
+As `max increases, more power from small-scale fluctuations is included in the Fisher information.
+By examining two different `max’s in forecasts B and C, we can determine how sensitive the ζ
+spectrum is to various scales, and whether or not an increase in the extent of the scales considered
+makes as dramatic an improvement to the constraints as for the ∆ spectrum.
+• “D” - All ∆&ζ correlations, `max,i = kmax r(zi) for the ith bin, where zi is the central redshift
+of the ith bin and kmax = 0.2 Mpc−1. The `max’s for each bin and each of the surveys
+consid
 # The way that the code deals with different surveys is that the user inputs all the relevant parameters which can be stored and then accessed by changing the values of the variables "NO" and "N". The former controls the CLASS spectra that are read-in and the latter controls the chosen survey. More specifically, the user sets the parameters for the nth survey in the nth element of the various arrays in this section, controlling which survey is used in the forecast by setting the corresponding element for the number of bins in "N" to a value>0, and the rest to 0.
 # Currently, with the addition of the redshift-weighted number count power spectrum, the code does not completely support multi-tracer forecasts [TBC], though this generalisation should be fairly straight-forward. 
 #
@@ -146,7 +159,7 @@ ctype = ['gal_spec','gal_spec']                  # Flag that controls the type o
 subctype = ['Euc_spec','SKA_2_spec']             # Flag that controls the specific survey biases, dNdz etc. to be used. Used as a label in the output files of Fisher forecasts. 
 zMx = [1.8,2.0]                                  # Maximum redshift bound for each survey
 zMn = [0.9,0.1]                                  # Minimum redshift bound for each survey
-N = [0,22]                                        # 2x the individual number of bins for the survey considered. All other elements should be set to zero, unless the code has been adapted for multi-tracer calculations [TBC]. Since each bin will have a number counts power spectrum (\Delta) and a redshift-weighted number counts power spectrum (\zeta), this should always be an EVEN number = 2x Number of C_\ell^{\Delta} bins!
+N = [40,0]                                        # 2x the individual number of bins for the survey considered. All other elements should be set to zero, unless the code has been adapted for multi-tracer calculations [TBC]. Since each bin will have a number counts power spectrum (\Delta) and a redshift-weighted number counts power spectrum (\zeta), this should always be an EVEN number = 2x Number of C_\ell^{\Delta} bins!
 Nsum = sum(N)
 Redsig = [0.001,0.001]                           # Redshift accuracy, later should be multiplied (1+z) for each bin. Redshift window widths, on the other hand, are stored in zsigmas [TBC] #CURRENTLY this parameter has no part in the calculation, but e.g. for photometric galaxies where the resolution is more limiting, should be taken into account in the galaxy distribution function.
 #sigmaZ = Redsig[0]
