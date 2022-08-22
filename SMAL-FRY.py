@@ -150,8 +150,8 @@ Nsum = sum(N)
 Redsig = [0.001,0.001]                           # Redshift accuracy, later should be multiplied (1+z) for each bin. Redshift window widths, on the other hand, are stored in zsigmas [TBC] #CURRENTLY this parameter has no part in the calculation, but e.g. for photometric galaxies where the resolution is more limiting, should be taken into account in the galaxy distribution function.
 #sigmaZ = Redsig[0]
 biastype = [2,3]                                 # Linear bias general function form: 0 - Constant bias: b=biasno 1 - DESI bias: b(z) = biasno/D(z) 2 - Euclid bias: b(z) = biasno + biasno2*z 3 - SKAII bias: b(z) = biasno*exp(biasno2*z).
-biasno = [0.79,0.5887] 
-biasno2 = [0.68,0.8130]
+#biasno = [0.79,0.5887] 
+#biasno2 = [0.68,0.8130]
 surv = [i for i in range(len(N)) if N[i]>0]
 params['b1'] = biasno[surv[0]]                         #1st bias parameter
 params['b2'] = biasno2[surv[0]]                        #2nd bias parameter
@@ -162,7 +162,7 @@ params['b2'] = biasno2[surv[0]]                        #2nd bias parameter
 # NB! ONLY MAXIMUM OF ONE (Marg OR Fix) MAY BE NON-ZERO:
 # The Fix and Marg parameters have NOT been tested in this version of the code and should be checked if used [TBC]. 
 Fix = 0                                          # Number of parameters to fix (remove before inversion) (starting at the parameter with the highest index).
-Marg = 2                                         # Number of parameters to marginalise (remove after inversion) over (starting at the parameter with the highest index)
+Marg = 0#2                                         # Number of parameters to marginalise (remove after inversion) over (starting at the parameter with the highest index)
 # Currently, if left as default (0), the code will produce the conditional and marginalized errors (but no additional parameters are marginalized over).
 Cond = 1                                         # Should conditional errors be found? YES: 1, NO: 0.
 
@@ -365,8 +365,8 @@ def RUNCLASS(signV,params,key):
     for i in range(len(bins)):
          
          # Linear bisa b(z) and magnification bias s(z) parameters for input to CLASS.
-         BIASNO = params['b1']
-         BIASNO2 = params['b2']
+         BIASNO = 0.79#params['b1']
+         BIASNO2 = 0.68#params['b2']
          s0 = -0.106875
          s1 = 1.35999
          s2 = -0.620008
