@@ -150,11 +150,14 @@ Nsum = sum(N)
 Redsig = [0.001,0.001]                           # Redshift accuracy, later should be multiplied (1+z) for each bin. Redshift window widths, on the other hand, are stored in zsigmas [TBC] #CURRENTLY this parameter has no part in the calculation, but e.g. for photometric galaxies where the resolution is more limiting, should be taken into account in the galaxy distribution function.
 #sigmaZ = Redsig[0]
 biastype = [2,3]                                 # Linear bias general function form: 0 - Constant bias: b=biasno 1 - DESI bias: b(z) = biasno/D(z) 2 - Euclid bias: b(z) = biasno + biasno2*z 3 - SKAII bias: b(z) = biasno*exp(biasno2*z).
-#biasno = [0.79,0.5887] 
-#biasno2 = [0.68,0.8130]
+biasno = [0.79,0.5887] 
+biasno2 = [0.68,0.8130]
 surv = [i for i in range(len(N)) if N[i]>0]
-#params['b1'] = biasno[surv[0]]                         #1st bias parameter
-#params['b2'] = biasno2[surv[0]]                        #2nd bias parameter
+
+params['b1'] = biasno[surv[0]]                         #1st bias parameter
+params['b2'] = biasno2[surv[0]]                        #2nd bias parameter
+print('\n\nb1: '+str(params['b1'])+' b2: '+str(params['b2'])+'\n\n')
+
 
 #Noise and Fisher limits:
 #########################
@@ -365,8 +368,8 @@ def RUNCLASS(signV,params,key):
     for i in range(len(bins)):
          
          # Linear bisa b(z) and magnification bias s(z) parameters for input to CLASS.
-         BIASNO = 0.79#params['b1']
-         BIASNO2 = 0.68#params['b2']
+         BIASNO = params['b1']
+         BIASNO2 = params['b2']
          s0 = -0.106875
          s1 = 1.35999
          s2 = -0.620008
