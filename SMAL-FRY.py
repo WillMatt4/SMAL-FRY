@@ -154,9 +154,9 @@ biasno = [0.79,0.5887]
 biasno2 = [0.68,0.8130]
 surv = [i for i in range(len(N)) if N[i]>0]
 
-params['b1'] = biasno[surv[0]]                         #1st bias parameter
-params['b2'] = biasno2[surv[0]]                        #2nd bias parameter
-print('\n\nb1: '+str(params['b1'])+' b2: '+str(params['b2'])+'\n\n')
+#params['b1'] = biasno[surv[0]]                         #1st bias parameter
+#params['b2'] = biasno2[surv[0]]                        #2nd bias parameter
+#print('\n\nb1: '+str(params['b1'])+' b2: '+str(params['b2'])+'\n\n')
 
 
 #Noise and Fisher limits:
@@ -368,8 +368,9 @@ def RUNCLASS(signV,params,key):
     for i in range(len(bins)):
          
          # Linear bisa b(z) and magnification bias s(z) parameters for input to CLASS.
-         BIASNO = params['b1']
-         BIASNO2 = params['b2']
+         BIASNO = biasno[surv[0]]#params['b1']
+         BIASNO2 = biasno2[surv[0]]#params['b2']
+         print(BIASNO,BIASNO2)
          s0 = -0.106875
          s1 = 1.35999
          s2 = -0.620008
