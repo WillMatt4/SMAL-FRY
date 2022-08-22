@@ -165,7 +165,7 @@ print('\n\nb1: '+str(params['b1'])+' b2: '+str(params['b2'])+'\n\n')
 # NB! ONLY MAXIMUM OF ONE (Marg OR Fix) MAY BE NON-ZERO:
 # The Fix and Marg parameters have NOT been tested in this version of the code and should be checked if used [TBC]. 
 Fix = 0                                          # Number of parameters to fix (remove before inversion) (starting at the parameter with the highest index).
-Marg = 0#2                                         # Number of parameters to marginalise (remove after inversion) over (starting at the parameter with the highest index)
+Marg = 2                                         # Number of parameters to marginalise (remove after inversion) over (starting at the parameter with the highest index)
 # Currently, if left as default (0), the code will produce the conditional and marginalized errors (but no additional parameters are marginalized over).
 Cond = 1                                         # Should conditional errors be found? YES: 1, NO: 0.
 
