@@ -696,8 +696,8 @@ for i in range(4,Nsum+3+1):
   Hubf = interpolate.interp1d(Z, Hub, kind='cubic',axis = 0)  #/Mpc
 
   if WHICHTRACERS[0]==0 or WHICHTRACERS[0]==1:     # Selecting which surveys get lmax cut-off #(0: EUC_SPEC) #(0: SKA_SPEC)
-     Lmax_Tr = [lmax for z in zmeans]              # fixed maximum ell.
-   #Lmax_Tr = [int(kmax*Chif(z)) for z in zmeans]# z-dependent maximum ell.
+     #Lmax_Tr = [lmax for z in zmeans]              # fixed maximum ell.
+     Lmax_Tr = [int(kmax*Chif(z)) for z in zmeans]# z-dependent maximum ell.
   Lmax_Tr+=Lmax_Tr                                 # These are the lmax values for the \Delta bins then the \zeta bins (The same for each bin of corresponding redshift).
 
 
