@@ -1,8 +1,8 @@
 #!/bin/sh
 ##up to 12h:
-##SBATCH --partition=shared-cpu
+#SBATCH --partition=shared-cpu
 ##12h - 4days:
-#SBATCH --partition=public-cpu
+##SBATCH --partition=public-cpu
 ##up to 15min:
 ##SBATCH --partition=debug-cpu
 ##max. of 2 cores for 14 days:
@@ -13,7 +13,7 @@
 #SBATCH --ntasks=8 
 ## 5 params + fiducial + 2 bias 
 ##SBATCH --cpus-per-task=3  
-#SBATCH --time=26:00:00
+#SBATCH --time=12:00:00
 
 #SBATCH --mail-type=ALL
 
