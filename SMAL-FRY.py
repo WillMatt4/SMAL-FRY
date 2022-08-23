@@ -108,9 +108,9 @@ start=time.time()
 ################################
 #COSMOLOGY AND INPUTS FOR CLASS:
 ################################
-RUN_SPECTRA = 0                                   # Should CLASS be used to generate the necessary spectra? YES: 1, NO: 0.
-EXTRACT_ZETA = 0                                  # Should the redshift-weighted number count power spectrum? YES: 1, NO: 0.
-RUN_FISHER = 1                                    # Should the Fisher analysis be run (DOESN'T REQUIRE MULTIPLE CORES)
+RUN_SPECTRA = 1                                   # Should CLASS be used to generate the necessary spectra? YES: 1, NO: 0.
+EXTRACT_ZETA = 1                                  # Should the redshift-weighted number count power spectrum? YES: 1, NO: 0.
+RUN_FISHER = 0                                    # Should the Fisher analysis be run (DOESN'T REQUIRE MULTIPLE CORES)
 CLASSPATH = '/home/users/m/matthews/scratch/Zeta/SMAL-FRY/class_public-3.0.1_mod/' #
 OUTPATH = '/home/users/m/matthews/scratch/Zeta/outputs/' #
 NO = '04'                                         # This Number relates to the filename and numbering scheme of the input CLASS spectra.
@@ -129,7 +129,7 @@ params['ns'] = 0.96605
 params['logAs'] = 3.0448                        # log(10^{10}A_s
 k_pivot = 0.05                                   # [h/Mpc]
 tau0 = 14187.020887                              # Age of universe [Mpc].
-lmax = 300
+lmax = 1500
 kmax = 0.2                                       # Wave number [Mpc^-1] relating to the non-linear cut-off in ell for each bin used in the Fisher analysis.
 
 
