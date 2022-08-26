@@ -14,7 +14,7 @@
 ##SBATCH --cpus-per-task=1  
 #SBATCH --time=10:00:00
 
-##SBATCH --mail-type=ALL
+#SBATCH --mail-type=ALL
 
 #SBATCH -J deltazeta_fisher##test0##rdn0_1000
 #SBATCH --output=slurm-%x-%J.out
