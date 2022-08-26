@@ -56,7 +56,7 @@ echo ""
 
 
 #launch simulations
-srun python3 SMAL-FRY.py --no-kill ##--wait
+srun python3 SMAL-FRY.py ##--wait = 0
 wait
 echo ""
 echo "***** DONE *****"
