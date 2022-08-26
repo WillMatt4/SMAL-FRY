@@ -108,8 +108,8 @@ start=time.time()
 ################################
 #COSMOLOGY AND INPUTS FOR CLASS:
 ################################
-RUN_SPECTRA = 1                                   # Should CLASS be used to generate the necessary spectra? YES: 1, NO: 0.
-EXTRACT_ZETA = 0                                  # Should the redshift-weighted number count power spectrum? YES: 1, NO: 0.
+RUN_SPECTRA = 0                                   # Should CLASS be used to generate the necessary spectra? YES: 1, NO: 0.
+EXTRACT_ZETA = 1                                  # Should the redshift-weighted number count power spectrum? YES: 1, NO: 0.
 RUN_FISHER = 0                                    # Should the Fisher analysis be run (DOESN'T REQUIRE MULTIPLE CORES)
 CLASSPATH = '/home/users/m/matthews/scratch/Zeta/SMAL-FRY/class_public-3.0.1_mod/' #
 OUTPATH = '/home/users/m/matthews/scratch/Zeta/outputs/' #
@@ -549,27 +549,27 @@ if RUN_SPECTRA==1:
   #FIDUCIAL:
   ##########
   itr = mpi.rank
-  #if itr==0:
-  #    Spectra(0,params,'')
+  if itr==0:
+      Spectra(0,params,'')
   
   #mpi.barrier #wait for fiducial run to complete (background to be generated)
     
-  #if itr!=0:  
-  if itr>=0:  
-  #    key = Keys[itr-1]
-      key = Keys[itr]
+  if itr!=0:  
+  #if itr>=0:  
+      key = Keys[itr-1]
+  #    key = Keys[itr]
   #PLUS STEP:
   ###########
-  #    Spectra(1,params,key)
+      Spectra(1,params,key)
   #MINUS STEP:
   ############
-  #    Spectra(-1,params,key)
+      Spectra(-1,params,key)
 
       if stencil==5:
 
     #PLUS 2*STEP:
     #############
-  #      Spectra(2,params,key)
+        Spectra(2,params,key)
     #MINUS 2*STEP:
     ##############
         Spectra(-2,params,key)
