@@ -154,8 +154,8 @@ biasno = [0.79,0.5887]
 biasno2 = [0.68,0.8130]
 surv = [i for i in range(len(N)) if N[i]>0]
 
-params['b1'] = biasno[surv[0]]                         #1st bias parameter
-params['b2'] = biasno2[surv[0]]                        #2nd bias parameter
+#params['b1'] = biasno[surv[0]]                         #1st bias parameter
+#params['b2'] = biasno2[surv[0]]                        #2nd bias parameter
 #print('\n\nb1: '+str(params['b1'])+' b2: '+str(params['b2'])+'\n\n')
 
 
