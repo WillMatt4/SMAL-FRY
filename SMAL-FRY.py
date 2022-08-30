@@ -699,7 +699,7 @@ for i in range(4,Nsum+3+1):
      #Lmax_Tr = [lmax for z in zmeans]              # fixed maximum ell.
      Lmax_Tr = [int(kmax*Chif(z)) for z in zmeans]# z-dependent maximum ell.
   Lmax_Tr+=Lmax_Tr                                 # These are the lmax values for the \Delta bins then the \zeta bins (The same for each bin of corresponding redshift).
-
+  print(Lmax_Tr)
 
 
 ##################
