@@ -113,7 +113,7 @@ EXTRACT_ZETA = 1                                  # Should the redshift-weighted
 RUN_FISHER = 0                                    # Should the Fisher analysis be run (DOESN'T REQUIRE MULTIPLE CORES)
 CLASSPATH = '/home/users/m/matthews/scratch/Zeta/SMAL-FRY/class_public-3.0.1_mod/' #
 OUTPATH = '/home/users/m/matthews/scratch/Zeta/outputs/' #
-NO = '06'                                         # This Number relates to the filename and numbering scheme of the input CLASS spectra.
+NO = '07'                                         # This Number relates to the filename and numbering scheme of the input CLASS spectra.
  
 #################
 #INITIALIZATIONS:
@@ -145,7 +145,7 @@ ctype = ['gal_spec','gal_spec']                  # Flag that controls the type o
 subctype = ['Euc_spec','SKA_2_spec']             # Flag that controls the specific survey biases, dNdz etc. to be used. Used as a label in the output files of Fisher forecasts. 
 zMx = [1.8,2.0]                                  # Maximum redshift bound for each survey
 zMn = [0.9,0.1]                                  # Minimum redshift bound for each survey
-N = [40,0]                                        # 2x the individual number of bins for the survey considered. All other elements should be set to zero, unless the code has been adapted for multi-tracer calculations [TBC]. Since each bin will have a number counts power spectrum (\Delta) and a redshift-weighted number counts power spectrum (\zeta), this should always be an EVEN number = 2x Number of C_\ell^{\Delta} bins!
+N = [0,22]                                        # 2x the individual number of bins for the survey considered. All other elements should be set to zero, unless the code has been adapted for multi-tracer calculations [TBC]. Since each bin will have a number counts power spectrum (\Delta) and a redshift-weighted number counts power spectrum (\zeta), this should always be an EVEN number = 2x Number of C_\ell^{\Delta} bins!
 Nsum = sum(N)
 Redsig = [0.001,0.001]                           # Redshift accuracy, later should be multiplied (1+z) for each bin. Redshift window widths, on the other hand, are stored in zsigmas [TBC] #CURRENTLY this parameter has no part in the calculation, but e.g. for photometric galaxies where the resolution is more limiting, should be taken into account in the galaxy distribution function.
 #sigmaZ = Redsig[0]
@@ -407,7 +407,7 @@ def RUNCLASS(signV,params,key):
 
     system('cp '+CLASSPATH+suptype+'_template.ini'+' '+CLASSPATH+suptype+'_'+key+'_'+signV+'.ini')
     f=open(CLASSPATH+suptype+'_'+key+'_'+signV+'.ini','a') 
-    f.write('l_switch_limber_for_nc_local_over_z = '+str(600)+'\n')  #These accuracy parameters can be adjusted to attain the necessary accuracy at lower ells, especially for narrow windows where Limber is not effective on large scales.
+    f.write('l_switch_limber_for_nc_local_over_z = '+str(300)+'\n')  #These accuracy parameters can be adjusted to attain the necessary accuracy at lower ells, especially for narrow windows where Limber is not effective on large scales.
     f.write('l_switch_limber_for_nc_los_over_z = '+str(300)+'\n')    #These accuracy parameters can be adjusted to attain the necessary accuracy at lower ells, especially for narrow windows where Limber is not effective on large scales.
     f.write('h = '+str(params['h'])+'\n') 
     f.write('omega_b = '+str(params['wb'])+'\n') 
