@@ -108,12 +108,12 @@ start=time.time()
 ################################
 #COSMOLOGY AND INPUTS FOR CLASS:
 ################################
-RUN_SPECTRA = 0                                   # Should CLASS be used to generate the necessary spectra? YES: 1, NO: 0.
-EXTRACT_ZETA = 0                                  # Should the redshift-weighted number count power spectrum? YES: 1, NO: 0.
-RUN_FISHER = 1                                    # Should the Fisher analysis be run (DOESN'T REQUIRE MULTIPLE CORES)
+RUN_SPECTRA = 1                                   # Should CLASS be used to generate the necessary spectra? YES: 1, NO: 0.
+EXTRACT_ZETA = 1                                  # Should the redshift-weighted number count power spectrum? YES: 1, NO: 0.
+RUN_FISHER = 0                                    # Should the Fisher analysis be run (DOESN'T REQUIRE MULTIPLE CORES)
 CLASSPATH = '/home/users/m/matthews/scratch/Zeta/SMAL-FRY/class_public-3.0.1_mod/' #
 OUTPATH = '/home/users/m/matthews/scratch/Zeta/outputs/' #
-NO = '05'                                         # This Number relates to the filename and numbering scheme of the input CLASS spectra.
+NO = '06'                                         # This Number relates to the filename and numbering scheme of the input CLASS spectra.
  
 #################
 #INITIALIZATIONS:
