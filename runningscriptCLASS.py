@@ -13,7 +13,7 @@
 #SBATCH --ntasks=8
 ## 5 params + fiducial + 2 bias 
 ##SBATCH --cpus-per-task=3  
-#SBATCH --time=12:00:00
+#SBATCH --time=48:00:00
 
 #SBATCH --mail-type=ALL
 
