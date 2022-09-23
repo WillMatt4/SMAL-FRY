@@ -129,7 +129,7 @@ params['ns'] = 0.96605
 params['logAs'] = 3.0448                        # log(10^{10}A_s
 k_pivot = 0.05                                   # [h/Mpc]
 tau0 = 14187.020887                              # Age of universe [Mpc].
-lmax = 1500
+lmax = 1200
 kmax = 0.2                                       # Wave number [Mpc^-1] relating to the non-linear cut-off in ell for each bin used in the Fisher analysis.
 
 
