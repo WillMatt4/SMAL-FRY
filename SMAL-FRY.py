@@ -407,8 +407,8 @@ def RUNCLASS(signV,params,key):
 
     system('cp '+CLASSPATH+suptype+'_template.ini'+' '+CLASSPATH+suptype+'_'+key+'_'+signV+'.ini')
     f=open(CLASSPATH+suptype+'_'+key+'_'+signV+'.ini','a') 
-    f.write('l_switch_limber_for_nc_local_over_z = '+str(300)+'\n')  #These accuracy parameters can be adjusted to attain the necessary accuracy at lower ells, especially for narrow windows where Limber is not effective on large scales.
-    f.write('l_switch_limber_for_nc_los_over_z = '+str(300)+'\n')    #These accuracy parameters can be adjusted to attain the necessary accuracy at lower ells, especially for narrow windows where Limber is not effective on large scales.
+    f.write('l_switch_limber_for_nc_local_over_z = '+str(200)+'\n')  #These accuracy parameters can be adjusted to attain the necessary accuracy at lower ells, especially for narrow windows where Limber is not effective on large scales.
+    f.write('l_switch_limber_for_nc_los_over_z = '+str(200)+'\n')    #These accuracy parameters can be adjusted to attain the necessary accuracy at lower ells, especially for narrow windows where Limber is not effective on large scales.
     f.write('h = '+str(params['h'])+'\n') 
     f.write('omega_b = '+str(params['wb'])+'\n') 
     f.write('omega_cdm = '+str(params['wc'])+'\n') 
