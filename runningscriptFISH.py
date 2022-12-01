@@ -55,7 +55,7 @@ echo ""
 
 
 #launch simulations
-srun python3 SMAL-FRY_nobias.py
+srun python3 SMAL-FRY.py
 
 echo ""
 echo "***** DONE *****"
