@@ -1038,13 +1038,7 @@ plt.show()
     #Marginalisation component [TBC].
     if (Fix!=0):
         Marg = Fix
-    if (Marg!=1):
-      for i in range(2):
-        if (i==2-Marg):
-          headerline = headerline +','+ 'b'+str(i+1) 
-        else:
-          headerline = headerline+',' + 'b'+str(i+1) 
-    
+   
 
     f.write(headerline+'): \n')
     for i in range(len(params)-Marg):
