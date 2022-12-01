@@ -113,7 +113,7 @@ EXTRACT_ZETA = 0                                  # Should the redshift-weighted
 RUN_FISHER = 1                                    # Should the Fisher analysis be run (DOESN'T REQUIRE MULTIPLE CORES)
 CLASSPATH = '/home/users/m/matthews/scratch/Zeta/SMAL-FRY/class_public-3.0.1_mod/' #
 OUTPATH = '/home/users/m/matthews/scratch/Zeta/outputs/' #
-NO = '06'                                         # This Number relates to the filename and numbering scheme of the input CLASS spectra.
+NO = '07'                                         # This Number relates to the filename and numbering scheme of the input CLASS spectra.
  
 #################
 #INITIALIZATIONS:
@@ -145,7 +145,7 @@ ctype = ['gal_spec','gal_spec']                  # Flag that controls the type o
 subctype = ['Euc_spec','SKA_2_spec']             # Flag that controls the specific survey biases, dNdz etc. to be used. Used as a label in the output files of Fisher forecasts. 
 zMx = [1.8,2.0]                                  # Maximum redshift bound for each survey
 zMn = [0.9,0.1]                                  # Minimum redshift bound for each survey
-N = [40,0]                                        # 2x the individual number of bins for the survey considered. All other elements should be set to zero, unless the code has been adapted for multi-tracer calculations [TBC]. Since each bin will have a number counts power spectrum (\Delta) and a redshift-weighted number counts power spectrum (\zeta), this should always be an EVEN number = 2x Number of C_\ell^{\Delta} bins!
+N = [0,22]                                        # 2x the individual number of bins for the survey considered. All other elements should be set to zero, unless the code has been adapted for multi-tracer calculations [TBC]. Since each bin will have a number counts power spectrum (\Delta) and a redshift-weighted number counts power spectrum (\zeta), this should always be an EVEN number = 2x Number of C_\ell^{\Delta} bins!
 Nsum = sum(N)
 Redsig = [0.001,0.001]                           # Redshift accuracy, later should be multiplied (1+z) for each bin. Redshift window widths, on the other hand, are stored in zsigmas [TBC] #CURRENTLY this parameter has no part in the calculation, but e.g. for photometric galaxies where the resolution is more limiting, should be taken into account in the galaxy distribution function.
 #sigmaZ = Redsig[0]
@@ -165,7 +165,7 @@ surv = [i for i in range(len(N)) if N[i]>0]
 # NB! ONLY MAXIMUM OF ONE (Marg OR Fix) MAY BE NON-ZERO:
 # The Fix and Marg parameters have NOT been tested in this version of the code and should be checked if used [TBC]. 
 Fix = 0                                          # Number of parameters to fix (remove before inversion) (starting at the parameter with the highest index).
-Marg = 2                                         # Number of parameters to marginalise (remove after inversion) over (starting at the parameter with the highest index)
+Marg = 0                                         # Number of parameters to marginalise (remove after inversion) over (starting at the parameter with the highest index)
 # Currently, if left as default (0), the code will produce the conditional and marginalized errors (but no additional parameters are marginalized over).
 Cond = 1                                         # Should conditional errors be found? YES: 1, NO: 0.
 
