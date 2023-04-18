@@ -2,10 +2,10 @@
 # SMAL-FRY  #  __/|/|
 ############# (._>/\|  
 #
-# - SiMple AppLication of FisheR machinerY
+# - SiMple AppLication of FoRecasting machinerY
 #
 # Developed by William Matthewson (Unige - william.matthewson@unige.ch) and Dennis Stock (Unige), based on a prior code from Mario Ballardini (University of Bologna).
-# Used for simple Fisher forecasting and calculation of redshift-weighted number counts spectra in 2203.07414.
+# Used for simple forecasting and calculation of redshift-weighted number counts spectra in 2203.07414.
 #
 # The Parameters in this file are for a minimal example that can be used to quickly test that the various pieces of the code are working properly.
 # Please see the following brief introduction for more details of this minimal example and how to use this code.
@@ -19,8 +19,8 @@
 # The action of this code can be divided into three main sections:
 # (1) - A modified version of CLASSgal is used to generate the spectra required. I.e. Galaxy number counts spectra (also referred to as \Delta). 
 # (2) - A subroutine in this python code uses the generated \Delta spectra to produce the redshift-weighted number count spectra (also referred to as \zeta), which are then saved together with the \Delta spectra in new output files.  
-# (3) - The full complement of spectra are read in and combined with user-defined parameters for observational surveys to produce Fisher forecasts for a set of parameters, also user-defined. Note: If adding new parameters for the Fisher forecasting, it is important that these parameters be linked somehow to the CLASS input, so that they effect the generated spectra and subsequent numerical derivatives used in the forecasts.
-# A new user will need to familiarise themselves with the input parameters of CLASS, the survey (biases, galaxy distributions, sky coverage etc.) they would like to forecast and the available parameters that are supported by this code. For now the code has only been tested with spectroscopic galaxy surveys, but the option exists to generalize to photometric/Intensity mapping surveys in the Fisher code and the modified version of CLASSgal. 
+# (3) - The full complement of spectra are read in and combined with user-defined parameters for observational surveys to produce forecasts for a set of parameters, also user-defined. Note: If adding new parameters for the forecasting, it is important that these parameters be linked somehow to the CLASS input, so that they effect the generated spectra and subsequent numerical derivatives used in the forecasts.
+# A new user will need to familiarise themselves with the input parameters of CLASS, the survey (biases, galaxy distributions, sky coverage etc.) they would like to forecast and the available parameters that are supported by this code. For now the code has only been tested with spectroscopic galaxy surveys, but the option exists to generalize to photometric/Intensity mapping surveys in the forecasting code and the modified version of CLASSgal. 
 # The major modifications to CLASSgal are: 
 # - The addition of certain window functions (see \omega(z_i,z) in the paper 2203.07414) that may be used to generate the \zeta spectra. 
 # - The addition of a 'selection_list' variable that allows the window function for each bin to be specified individually.
@@ -35,9 +35,9 @@
 # The CLASS part will generate \Delta spectra for each bin, using 3 different window functions: 2 for the extraction of the \zeta spectra, and one as the \Delta spectrum with a Gaussian window function. 
 # This means that the eventual 'extracted' spectra will be \Delta_i\Delta_j, \zeta_i\zeta_j, \Delta_i\zeta_j and \zeta_i\Delta_j for (i=j) auto- and (i!=j) cross-correlations of the chosen set of bins centred at redshifts z_i. (I.e. the SAME bins will be used for \Delta and \zeta spectra, which is also the reason why N contains 2x the number of bins for an individual spectra.) 
 #
-# Finally, if all the required spectra have been generated, the code should complete by performing the Fisher forecast. It is recommended that the user check the numerical derivatives ('DERIVATIVE CHECK') to make sure that the chosen step-size ('step') is stable numerically.
+# Finally, if all the required spectra have been generated, the code should complete by performing the forecast. It is recommended that the user check the numerical derivatives ('DERIVATIVE CHECK') to make sure that the chosen step-size ('step') is stable numerically.
 #
-# In its current state, the code will output the Fisher forecast constraints and covariance matrices for:
+# In its current state, the code will output the forecast constraints and covariance matrices for:
 # - The full \Delta\&\zeta information
 # - The \Delta spectra alone
 # - The \zeta spectra alone
@@ -51,7 +51,7 @@
 # - Run the minimal example to check everything is in place.
 # - [This may be included in the next steps]: Undo the 'damage' done to set the code up for the minimimal example, search 'undo the minimal example'.
 # - Choose a survey and enter all the relevant parameters into this python file.
-# - Check to see that the Fisher parameters are correct.
+# - Check to see that the forecasting parameters are correct.
 # - run [python3 SMAL-FRY.py] with 'RUN_SPECTRA' and 'EXTRACT_ZETA' both set equal to 1.
 # - Depending on the spectra concerned, accuracy, number of bins, type of numerical derivatives etc. you may have some time on your hands at this stage.
 # - Revel in your newly-completed constraints.
@@ -110,7 +110,7 @@ start=time.time()
 ################################
 RUN_SPECTRA = 0                                   # Should CLASS be used to generate the necessary spectra? YES: 1, NO: 0.
 EXTRACT_ZETA = 0                                  # Should the redshift-weighted number count power spectrum? YES: 1, NO: 0.
-RUN_FISHER = 1                                    # Should the Fisher analysis be run (DOESN'T REQUIRE MULTIPLE CORES)
+RUN_FOREC = 1                                    # Should the forecasting analysis be run (DOESN'T REQUIRE MULTIPLE CORES)
 CLASSPATH = '/home/users/m/matthews/scratch/Zeta/SMAL-FRY/class_public-3.0.1_mod/' #
 OUTPATH = '/home/users/m/matthews/scratch/Zeta/outputs/' #
 NO = '07'                                         # This Number relates to the filename and numbering scheme of the input CLASS spectra.
@@ -130,19 +130,19 @@ params['logAs'] = 3.0448                        # log(10^{10}A_s
 k_pivot = 0.05                                   # [h/Mpc]
 tau0 = 14187.020887                              # Age of universe [Mpc].
 lmax = 1500
-kmax = 0.2                                       # Wave number [Mpc^-1] relating to the non-linear cut-off in ell for each bin used in the Fisher analysis.
+kmax = 0.2                                       # Wave number [Mpc^-1] relating to the non-linear cut-off in ell for each bin used in the forecasting analysis.
 
 
-#Fisher and Survey parameters:  
+#Forecasting and Survey parameters:  
 ##############################
 
 # The way that the code deals with different surveys is that the user inputs all the relevant parameters which can be stored and then accessed by changing the values of the variables "NO" and "N". The former controls the CLASS spectra that are read-in and the latter controls the chosen survey. More specifically, the user sets the parameters for the nth survey in the nth element of the various arrays in this section, controlling which survey is used in the forecast by setting the corresponding element for the number of bins in "N" to a value>0, and the rest to 0.
 # Currently, with the addition of the redshift-weighted number count power spectrum, the code does not completely support multi-tracer forecasts [TBC], though this generalisation should be fairly straight-forward. 
 #
 
-suptype = 'Deltazeta'                            # Label for CLASS and Fisher output files.
+suptype = 'Deltazeta'                            # Label for CLASS and forecasting output files.
 ctype = ['gal_spec','gal_spec']                  # Flag that controls the type of survey, spectroscopic galaxies, photometric galaxies, HI intensity mapping for the purposes of CLASS spectra generation. 
-subctype = ['Euc_spec','SKA_2_spec']             # Flag that controls the specific survey biases, dNdz etc. to be used. Used as a label in the output files of Fisher forecasts. 
+subctype = ['Euc_spec','SKA_2_spec']             # Flag that controls the specific survey biases, dNdz etc. to be used. Used as a label in the output files of forecasts. 
 zMx = [1.8,2.0]                                  # Maximum redshift bound for each survey
 zMn = [0.9,0.1]                                  # Minimum redshift bound for each survey
 N = [0,22]                                        # 2x the individual number of bins for the survey considered. All other elements should be set to zero, unless the code has been adapted for multi-tracer calculations [TBC]. Since each bin will have a number counts power spectrum (\Delta) and a redshift-weighted number counts power spectrum (\zeta), this should always be an EVEN number = 2x Number of C_\ell^{\Delta} bins!
@@ -159,7 +159,7 @@ params['b2'] = biasno2[surv[0]]                        #2nd bias parameter
 #print('\n\nb1: '+str(params['b1'])+' b2: '+str(params['b2'])+'\n\n')
 
 
-#Noise and Fisher limits:
+#Noise and Forecasting limits:
 #########################
 
 # NB! ONLY MAXIMUM OF ONE (Marg OR Fix) MAY BE NON-ZERO:
@@ -171,7 +171,7 @@ Cond = 1                                         # Should conditional errors be 
 
 
 Noise = 1                                        # Should shot(/instrumental in some surveys) Noise be included? YES: 1, NO: 0.
-Lmin_TrPre = [10,10]                             # A minimum ell bound for the Fisher analysis to account for foreground cleaning/other effects that mean the lowest ells cannot be used.
+Lmin_TrPre = [10,10]                             # A minimum ell bound for the forecasting analysis to account for foreground cleaning/other effects that mean the lowest ells cannot be used.
 Lmin_Tr = []
 for i in range(len(Lmin_TrPre)):
     Lmin_Tr += [Lmin_TrPre[i] for j in range(N[i])]
@@ -259,7 +259,7 @@ print('-|-- SS    S  MM      M AA     A LL          FF       RR   RR     YY   __
 print('---|  SSSSS   MM      M AA     A LLLLLLLL    FF       RR     RR   YY  (._>/\| --|-')
 print('-|----------------------------------------------------------------------------|---')
 print('---|----------------------------------------------------------------------------|-')
-print(' - SiMple AppLication of FisheR machinerY.')
+print(' - SiMple AppLication of FoRecasting machinerY.')
 print('\n\n')
 
 
@@ -270,7 +270,7 @@ print('\n\n')
 #############
 
 #
-# These SKA(II) parameters are set manually, otherwise the survey binning will be performed across the redshift range in equal redshift portions, according to the number of bins set. The default redshift (Gaussian) bin width is set to the full-width at half maximum. NOTE: only gaussian window functions are fully-supported by the \zeta and Fisher code, even though CLASS handles other window types. [TBC]  
+# These SKA(II) parameters are set manually, otherwise the survey binning will be performed across the redshift range in equal redshift portions, according to the number of bins set. The default redshift (Gaussian) bin width is set to the full-width at half maximum. NOTE: only gaussian window functions are fully-supported by the \zeta and forecasting code, even though CLASS handles other window types. [TBC]  
 #
 SKAmeans = [0.2, 0.28, 0.36, 0.44, 0.53, 0.64, 0.79, 1.03, 1.31, 1.58, 1.86]
 SKAsigmas = [0.1, 0.08, 0.08, 0.08, 0.1, 0.12, 0.2, 0.28, 0.28, 0.28, 0.28]
@@ -504,7 +504,7 @@ def ExtractClDz(key,signV,zbar):
     return Cl_di_dj,Cl_di_zj,Cl_zi_dj,Cl_zi_zj
 
 def SaveClDz(key,signV,Cl_di_dj,Cl_di_zj,Cl_zi_dj,Cl_zi_zj):
-# This function saves the extracted spectra to the final data files to be used in the Fisher analysis.
+# This function saves the extracted spectra to the final data files to be used in the forecasting analysis.
 
 # As mentioned above, the format of this is like CAMB (NOTE: there are N \Delta (di) bins and N \zeta (zi) bins to be taken account of!)
 # [Header]
@@ -618,10 +618,10 @@ if EXTRACT_ZETA==1:
    mpi.barrier
 
 ###############################
-#LET THE FISHERING COMMENCE!!!#
+#LET THE FORECASTING COMMENCE!!!#
 ###############################
 
-if RUN_FISHER==1:
+if RUN_FOREC==1:
 
 #Check for missing spectra
 ############################ 
@@ -931,9 +931,9 @@ plt.show()
   '''
 
 
-#####################
-#FISHER CALCULATION
-#####################
+########################
+#FORECASTING CALCULATION
+########################
 
   def Fkernel_DeZe(i,j,l):
     Used = []
@@ -963,23 +963,23 @@ plt.show()
   def F_DeZe(i,j):
     return sum([Fkernel_DeZe(i,j,l)[0] for l in arange(min(Lmin_Tr),max(Lmax_Tr)+1)]), sum([Fkernel_DeZe(i,j,l)[1] for l in arange(min(Lmin_Tr),max(Lmax_Tr)+1)]), sum([Fkernel_DeZe(i,j,l)[2] for l in arange(min(Lmin_Tr),max(Lmax_Tr)+1)]), sum([Fkernel_DeZe(i,j,l)[3] for l in arange(min(Lmin_Tr),max(Lmax_Tr)+1)])
 
-  FisherDeZe=zeros([len(params),len(params)])
-  FisherDeZeD=zeros([len(params),len(params)])
-  FisherDeZeZ=zeros([len(params),len(params)])
-  FisherDeZeDZ=zeros([len(params),len(params)])
+  ForecDeZe=zeros([len(params),len(params)])
+  ForecDeZeD=zeros([len(params),len(params)])
+  ForecDeZeZ=zeros([len(params),len(params)])
+  ForecDeZeDZ=zeros([len(params),len(params)])
 
   for i in range(len(params)):
     for j in range(len(params)):
         if j>=i:
-            FisherDeZe[i,j]=FisherDeZe[j,i]=F_DeZe(i,j)[0]
-            FisherDeZeD[i,j]=FisherDeZeD[j,i]=F_DeZe(i,j)[1]
-            FisherDeZeZ[i,j]=FisherDeZeZ[j,i]=F_DeZe(i,j)[2]
-            FisherDeZeDZ[i,j]=FisherDeZeDZ[j,i]=F_DeZe(i,j)[3]
+            ForecDeZe[i,j]=ForecDeZe[j,i]=F_DeZe(i,j)[0]
+            ForecDeZeD[i,j]=ForecDeZeD[j,i]=F_DeZe(i,j)[1]
+            ForecDeZeZ[i,j]=ForecDeZeZ[j,i]=F_DeZe(i,j)[2]
+            ForecDeZeDZ[i,j]=ForecDeZeDZ[j,i]=F_DeZe(i,j)[3]
 
-  errDeZe=sqrt(diag(np.linalg.inv(FisherDeZe)))
-  errDeZeD=sqrt(diag(np.linalg.inv(FisherDeZeD)))
-  errDeZeZ=sqrt(diag(np.linalg.inv(FisherDeZeZ)))
-  errDeZeDZ=sqrt(diag(np.linalg.inv(FisherDeZeDZ)))
+  errDeZe=sqrt(diag(np.linalg.inv(ForecDeZe)))
+  errDeZeD=sqrt(diag(np.linalg.inv(ForecDeZeD)))
+  errDeZeZ=sqrt(diag(np.linalg.inv(ForecDeZeZ)))
+  errDeZeDZ=sqrt(diag(np.linalg.inv(ForecDeZeDZ)))
 
   errDeZe = errDeZe[0:len(errDeZe)-Marg]
   errDeZeD = errDeZeD[0:len(errDeZeD)-Marg]
@@ -992,14 +992,14 @@ plt.show()
   conderrDeZeDZ = zeros(len(errDeZeDZ))
 
   if Cond==1:
-      for i in range(len(FisherDeZe)-Marg):
-        conderrDeZe[i] = 1/sqrt(FisherDeZe[i,i])
-      for i in range(len(FisherDeZeD)-Marg):
-        conderrDeZeD[i] = 1/sqrt(FisherDeZeD[i,i])
-      for i in range(len(FisherDeZeZ)-Marg):
-        conderrDeZeZ[i] = 1/sqrt(FisherDeZeZ[i,i])
-      for i in range(len(FisherDeZeDZ)-Marg):
-        conderrDeZeDZ[i] = 1/sqrt(FisherDeZeDZ[i,i])
+      for i in range(len(ForecDeZe)-Marg):
+        conderrDeZe[i] = 1/sqrt(ForecDeZe[i,i])
+      for i in range(len(ForecDeZeD)-Marg):
+        conderrDeZeD[i] = 1/sqrt(ForecDeZeD[i,i])
+      for i in range(len(ForecDeZeZ)-Marg):
+        conderrDeZeZ[i] = 1/sqrt(ForecDeZeZ[i,i])
+      for i in range(len(ForecDeZeDZ)-Marg):
+        conderrDeZeDZ[i] = 1/sqrt(ForecDeZeDZ[i,i])
 
 #Saving of results
   addi = ''
@@ -1012,7 +1012,7 @@ plt.show()
   for i in WHICHTRACERS:
       BINNES+=str(int(N[i]/2))+'bin'+subctype[i]
 
-  RESULTS = [FisherDeZe,FisherDeZeD,FisherDeZeZ,FisherDeZeDZ]
+  RESULTS = [ForecDeZe,ForecDeZeD,ForecDeZeZ,ForecDeZeDZ]
   RESULTS2 = [errDeZe,errDeZeD,errDeZeZ,errDeZeDZ]
   RESULTS3 = [conderrDeZe,conderrDeZeD,conderrDeZeZ,conderrDeZeDZ]
   LAB2 = [suptype+addi,'Delta'+addi,'Zeta'+addi,'Delta+zeta'+addi]
@@ -1027,9 +1027,9 @@ plt.show()
     f.close()
 
     if (Noise==0):
-      f=open(SpectraPath+LAB2[j]+'_fisher_'+BINNES+'NN.dat','w')
+      f=open(SpectraPath+LAB2[j]+'_Forec_'+BINNES+'NN.dat','w')
     elif (Noise==1):
-      f=open(SpectraPath+LAB2[j]+'_fisher_'+BINNES+'.dat','w')
+      f=open(SpectraPath+LAB2[j]+'_Forec_'+BINNES+'.dat','w')
     headerline = '#Fiducial model ('
     for key in Keys[0:nParsLess]: 
         headerline+=key+','
